@@ -6,12 +6,12 @@ import java.time.ZonedDateTime;
 public class User {
     private Long id;//不可修改
     private String userName;//不可修改
-    @JsonIgnore
+    //@JsonIgnore
     private String password;//可修改
     private String nickName;//可修改
-    @JsonIgnore
+    //@JsonIgnore
     private String mobile;//可修改
-    @JsonIgnore
+    //@JsonIgnore
     private String email;//可修改
     private int gold;//可修改，用户不可修改
     private int available;//可修改，用户不可修改

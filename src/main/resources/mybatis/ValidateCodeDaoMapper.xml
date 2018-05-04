@@ -10,4 +10,17 @@
 	<select id="findByContact" parameterType="String" resultType="com.sandman.download.entity.ValidateCode">
 		select * from validateCode where delFlag=0 and contact=#{contact}
 	</select>
+	<update id="updateValidateCode" parameterType="com.sandman.download.entity.ValidateCode">
+		update validateCode set updateTime=#{updateTime}
+		<if test="isValid !=null and isValid != ''">
+			,isValid=#{isValid}
+		</if>
+		<if test="isSend !=null and isSend != ''">
+			,isSend=#{isSend}
+		</if>
+		where id=#{id}
+	</update>
+	<select id="getAllCodeInfo" resultType="com.sandman.download.entity.ValidateCode">
+		select * from validateCode
+	</select>
 </mapper>

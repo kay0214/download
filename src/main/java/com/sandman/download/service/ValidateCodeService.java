@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Created by wangj on 2018/5/4.
@@ -34,6 +35,7 @@ public class ValidateCodeService {
         deleteByContact(validateCode.getContact());
         validateCode.setCode(RandomUtils.getValidateCode());//获取6位数随机码
         validateCode.setDeadLine(ZonedDateTime.now().plusMinutes(5));//有效时间5分钟
+
         validateCode.setIsValid(0);
         validateCode.setIsSend(0);
         validateCode.setCreateBy(1L);//系统创建
@@ -42,8 +44,9 @@ public class ValidateCodeService {
         validateCode.setUpdateTime(ZonedDateTime.now());
         validateCode.setDelFlag(0);
 
-        //ValidateCode validateCode = validateCodeMapper.toEntity(validateCodeDTO);
         validateCodeDao.createCode(validateCode);//保存到数据库
+        validateCode = validateCodeDao.findByContact(validateCode.getContact());//获取到保存的验证码信息
+        log.info("validateCode:{}",validateCode);
         boolean sendSuccess = false;
         if(validateCode.getContact().contains("@")){//如果包含@，则发送邮件验证码
             String emailContent = TemplateUtils.getTemplateByName("emailCode");
@@ -58,11 +61,23 @@ public class ValidateCodeService {
         if(sendSuccess){
             validateCode.setIsValid(1);
             validateCode.setIsSend(1);
+            log.info("validateCode:{}",validateCode);
+            validateCodeDao.updateValidateCode(validateCode);
             return new BaseDto(200,"验证码发送成功");
         }
 
-
         return new BaseDto(414,"发送验证码失败");
+    }
+
+    /**
+     * 查询全部
+     * */
+    public BaseDto getAllCodeInfo(){
+        List<ValidateCode> list = validateCodeDao.getAllCodeInfo();
+        list.forEach(validateCode -> {
+            log.info(validateCode.toString());
+        });
+        return new BaseDto(200,"查询成功",list);
     }
     /**
      * 根据联系方式查询
@@ -71,13 +86,6 @@ public class ValidateCodeService {
         return validateCodeDao.findByContact(contact);
     }
 
-    /**
-     * Delete the validateCode by id.
-     */
-/*    public void delete(Long id) {
-        log.debug("Request to delete ValidateCode : {}", id);
-        validateCodeDao.deleteByContact(id);
-    }*/
     /**
      * delete by contact
      * */

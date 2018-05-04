@@ -34,7 +34,7 @@ public class UserService {
      * create a user account.
      */
     public BaseDto createUser(User user,String validateCode) {
-        log.info("Request to save User : {}", user);
+        log.info("Request to save User : {}，validateCode:{}", user,validateCode);
         User existUser = userDao.findByUserName(user.getUserName());
         if(existUser!=null)//用户名校验
             return new BaseDto(409,"用户名已存在!");

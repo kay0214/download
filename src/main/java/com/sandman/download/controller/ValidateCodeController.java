@@ -6,10 +6,7 @@ import com.sandman.download.service.ValidateCodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by wangj on 2018/5/4.
@@ -26,6 +23,13 @@ public class ValidateCodeController {
     @PostMapping("/sendValidateCode")
     public BaseDto sendValidateCode(@RequestBody ValidateCode validateCode){
         log.info("send a code to {}",validateCode.getContact());
+        if(validateCode.getContact()==null || "".equals(validateCode.getContact())){
+            return new BaseDto(413,"请先填写联系方式");
+        }
         return validateCodeService.sendValidateCode(validateCode);
+    }
+    @GetMapping("/getAllCodeInfo")
+    public BaseDto getAllCodeInfo(){
+        return validateCodeService.getAllCodeInfo();
     }
 }
