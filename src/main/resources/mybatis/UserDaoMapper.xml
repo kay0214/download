@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="com.sandman.download.dao.mysql.UserDao">
-	<select id="findByUserName" parameterType="String" resultType="com.sandman.download.entity.User">
-		select * from user where userName=#{userName}
+	<select id="findByUserName" parameterType="java.lang.String" resultType="com.sandman.download.entity.User">
+		select * from user where delFlag=0 and userName=#{userName}
+	</select>
+	<insert id="createUser" parameterType="com.sandman.download.entity.User">
+		insert into user values(null,#{userName},#{password},#{nickName},#{mobile},#{email},#{gold},#{available},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
+	</insert>
+	<update id="updateUser" parameterType="com.sandman.download.entity.User">
+		update user set updateTime=#{updateTime}
+		<if test="password != null and password !='' ">
+			,password=#{password}
+		</if>
+		<if test="nickName != null and nickName !='' ">
+			,nickName=#{nickName}
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			,mobile=#{mobile}
+		</if>
+		<if test="email != null and email !='' ">
+			,email=#{email}
+		</if>
+		<if test="gold != null and gold !='' ">
+			,gold=#{gold}
+		</if>
+		<if test="available != null and available !='' ">
+			,available=#{available}
+		</if>
+		<if test="updateBy != null and updateBy !='' ">
+			,updateBy=#{updateBy}
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			,delFlag=#{delFlag}
+		</if>
+		where id=#{id}
+	</update>
+	<select id="findByEmail" parameterType="com.sandman.download.entity.User" resultType="com.sandman.download.entity.User">
+		select * from user where delFlag=0 and email=#{email}
+	</select>
+	<select id="findByMobile" parameterType="com.sandman.download.entity.User" resultType="com.sandman.download.entity.User">
+		select * from user where delFlag=0 and mobile=#{mobile}
+	</select>
+	<select id="findById" parameterType="Long" resultType="com.sandman.download.entity.User">
+		select * from user where delFlag=0 and id=#{id}
 	</select>
 </mapper>

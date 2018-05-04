@@ -56,7 +56,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/api/sandman/v1/user/logoutSuccess")//登出成功页面
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .and()/**/
+                .and()
                 .rememberMe()
                 .rememberMeParameter("rememberMe")
                 .tokenValiditySeconds(60 * 60 * 24 * 7)//一周时间，记住我功能

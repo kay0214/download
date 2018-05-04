@@ -4,23 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.ZonedDateTime;
 
 public class User {
-    private Long id;
+    private Long id;//不可修改
+    private String userName;//不可修改
     @JsonIgnore
-    private String userName;
+    private String password;//可修改
+    private String nickName;//可修改
     @JsonIgnore
-    private String password;
-    private String nickName;
+    private String mobile;//可修改
     @JsonIgnore
-    private String mobile;
-    @JsonIgnore
-    private String email;
-    private int gold;
-    private int available;
-    private Long createBy;
-    private ZonedDateTime createTime;
-    private Long updateBy;
-    private ZonedDateTime updateTime;
-    private int delFlag;
+    private String email;//可修改
+    private int gold;//可修改，用户不可修改
+    private int available;//可修改，用户不可修改
+    private Long createBy;//不可修改
+    private ZonedDateTime createTime;//不可修改
+    private Long updateBy;//可修改
+    private ZonedDateTime updateTime;//可修改
+    private int delFlag;//可修改，用户不可修改
 
     public Long getId() {
         return id;

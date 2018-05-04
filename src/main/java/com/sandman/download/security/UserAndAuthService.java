@@ -20,13 +20,14 @@ public class UserAndAuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         System.out.println("userName=" + userName);
         User user = userDao.findByUserName(userName);
+        System.out.println(user.toString());
         if (user == null)
             throw new UsernameNotFoundException("user not found!");
-
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
         CurrentUser userAndAuth = new CurrentUser(user.getUserName(), user.getPassword(), authorityList);
         userAndAuth.setUserName(user.getUserName());
+        userAndAuth.setNickName(user.getNickName());
         userAndAuth.setId(user.getId());
         userAndAuth.setMobile(user.getMobile());
         userAndAuth.setEmail(user.getEmail());

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.sandman.download.dao.mysql.ValidateCodeDao">
+	<insert id="createCode" parameterType="com.sandman.download.entity.ValidateCode">
+		insert into validateCode values(null,#{contact},#{code},#{deadLine},#{isValid},#{isSend},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
+	</insert>
+	<update id="deleteByContact" parameterType="String">
+		update validateCode set delFlag=1 where contact=#{contact}
+	</update>
+	<select id="findByContact" parameterType="String" resultType="com.sandman.download.entity.ValidateCode">
+		select * from validateCode where delFlag=0 and contact=#{contact}
+	</select>
+</mapper>
