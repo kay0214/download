@@ -29,7 +29,7 @@ public class DownloadRecordService {
     /**
      * 创建一个下载记录
      */
-    public DownloadRecord createDownloadRecord(Long resId) {
+    public DownloadRecord save(Long resId) {
         Long userId = SecurityUtils.getCurrentUserId();
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setUserId(userId);
@@ -47,33 +47,27 @@ public class DownloadRecordService {
     }
 
     /**
-     * Get all the downloadRecords.
-     *
-     * @return the list of entities
+     * 获取用户的下载记录（分页）
      */
-/*    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Map getAllDownloadRecords(Integer pageNumber, Integer size)throws Exception {
         log.debug("Request to get all DownloadRecords");
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
         size = (size==null || size<0)?10:size;
-        Pageable pageable = PageableTools.basicPage(pageNumber,size,new SortDto("desc","recordTime"));
+
+        List<DownloadRecord> downloadRecordList = downloadRecordDao.findAllByUserId(SecurityUtils.getCurrentUserId(),pageNumber,size);
 
 
-        Page downloadRecordPage = downloadRecordRepository.findAllByUserId(SecurityUtils.getCurrentUserId(),pageable);
-
-
-        List<DownloadRecord> downloadRecordList = downloadRecordPage.getContent();
         downloadRecordList.forEach(downloadRecord -> {
             System.out.println(downloadRecord.getRes().getResSize());
         });
         Map data = new HashMap();
-        data.put("totalRow",downloadRecordPage.getTotalElements());
         data.put("totalPage",downloadRecordPage.getTotalPages());
         data.put("currentPage",downloadRecordPage.getNumber()+1);//默认0就是第一页
-        data.put("resourceList",getFileSizeHaveUnit(downloadRecordList));
+        data.put("resourceList",downloadRecordList);
 
         return data;
-    }*/
+    }
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位
      * */
