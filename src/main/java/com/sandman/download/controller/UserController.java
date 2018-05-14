@@ -54,4 +54,12 @@ public class UserController {
         map.put("exist",userService.contactExist(contact));//0:未传入联系方式；1:联系方式已经被绑定；2:联系方式未被绑定
         return map;
     }
+    @PostMapping("/success")
+    public void success(){
+        log.info("login success!");
+    }
+    @PostMapping("/login")
+    public void login(){
+        log.info("login!");
+    }
 }

@@ -51,6 +51,16 @@ public final class SecurityUtils {
         }
     }
     /**
+     * 返回当前用户的nickName
+     * */
+    public static String getCurrentNickName(){
+        try{
+            return getCurrentUser().getNickName();
+        }catch(NullPointerException e){
+            return null;
+        }
+    }
+    /**
      * 返回当前用户的mobile
      * */
     public static String getCurrentUserMobile(){

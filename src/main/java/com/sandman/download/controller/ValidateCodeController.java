@@ -18,7 +18,7 @@ public class ValidateCodeController {
     @Autowired
     private ValidateCodeService validateCodeService;
     /**
-     * POST  sendValidateCode : send a new validateCode.
+     * POST:发送验证码
      */
     @PostMapping("/sendValidateCode")
     public BaseDto sendValidateCode(@RequestBody ValidateCode validateCode){

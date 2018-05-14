@@ -3,14 +3,12 @@ package com.sandman.download.service;
 import com.sandman.download.dao.mysql.ValidateCodeDao;
 import com.sandman.download.entity.BaseDto;
 import com.sandman.download.entity.ValidateCode;
-import com.sandman.download.utils.DateUtils;
 import com.sandman.download.utils.RandomUtils;
 import com.sandman.download.utils.TemplateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class ValidateCodeService {
     @Autowired
     private SendEmailService sendEmailService;
     /**
-     * Save a validateCode.
+     * 发送验证码，流程：先将基本信息保存到数据库。然后生成验证码并发送。然后保存验证码到数据库
      */
     public BaseDto sendValidateCode(ValidateCode validateCode) {
         log.debug("Request to send ValidateCode : {}", validateCode);

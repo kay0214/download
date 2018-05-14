@@ -5,11 +5,11 @@ import java.time.ZonedDateTime;
 public class Resource {
     private Long id;
     private Long userId;
-    private String userName;
-    private String nickName;
+    private String userName;//这里需要改造，直接用User代替userName
+    private String nickName;//这里需要改造，直接用User代替nickName
     private String resName;
     private String resUrl;
-    private int resGold;
+    private Integer resGold;
     private String resDesc;
     private Long resSize;
     private String resType;
@@ -68,11 +68,11 @@ public class Resource {
         this.resUrl = resUrl;
     }
 
-    public int getResGold() {
+    public Integer getResGold() {
         return resGold;
     }
 
-    public void setResGold(int resGold) {
+    public void setResGold(Integer resGold) {
         this.resGold = resGold;
     }
 

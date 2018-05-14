@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.sandman.download.dao.mysql.ResourceDao">
+    <insert id="createResource" parameterType="com.sandman.download.entity.Resource" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into resource(userId,userName,nickName,resName,resUrl,resGold,resDesc,resSize,resType,downloadCount,createBy,createTime,updateBy,updateTime,delFlag) values(#{userId},#{userName},#{nickName},#{resName},#{resUrl},#{resGold},#{resDesc},#{resSize},#{resType},#{downloadCount},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
+    </insert>
+    <update id="updateById" parameterType="com.sandman.download.entity.Resource">
+        update resource set updateTime=#{updateTime}
+
+        <if test="resName!=null or resName!=''">
+            ,resName=#{resName}
+        </if>
+        <if test="resGold!=null or resGold!=''">
+            ,resGold=#{resGold}
+        </if>
+        <if test="resDesc!=null or resDesc!=''">
+            ,resDesc=#{resDesc}
+        </if>
+        <if test="updateBy!=null or updateBy!=''">
+            ,updateBy=#{updateBy}
+        </if>
+        <if test="delFlag!=null or delFlag!=''">
+            ,delFlag=#{delFlag}
+        </if>
+        where id=#{id}
+    </update>
+    <select id="findByUserId" parameterType="Long" resultType="com.sandman.download.entity.Resource">
+        select * from resource where userId=#{userId} and delFlag=0
+    </select>
+    <select id="findById" parameterType="Long" resultType="com.sandman.download.entity.Resource">
+        select * from resource where id=#{id} and delFlag=0
+    </select>
+</mapper>

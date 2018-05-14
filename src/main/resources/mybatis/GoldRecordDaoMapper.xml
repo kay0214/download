@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.sandman.download.dao.mysql.GoldRecordDao">
+    <insert id="createGoldRecord" parameterType="com.sandman.download.entity.GoldRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into goldRecord(userId,resId,resName,oriGold,resGold,curGold,opDesc,createBy,createTime,updateBy,updateTime,delFlag) values(#{userId}
+        <choose>
+            <when test="resId!=null and resId!=''">
+                ,#{resId}
+            </when>
+            <otherwise>
+                ,null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="resName!=null and resName!=''">
+                ,#{resName}
+            </when>
+            <otherwise>
+                ,null
+            </otherwise>
+        </choose>
+        ,#{oriGold},#{resGold},#{curGold},#{opDesc},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
+    </insert>
+    <update id="deleteById" parameterType="com.sandman.download.entity.GoldRecord">
+        update goldRecord set updateTime=#{updateTime}
+
+        <if test="updateBy!=null or updateBy!=''">
+            ,updateBy=#{updateBy}
+        </if>
+        <if test="delFlag!=null or delFlag!=''">
+            ,delFlag=#{delFlag}
+        </if>
+        where id=#{id}
+    </update>
+</mapper>
