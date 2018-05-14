@@ -78,9 +78,9 @@ public class UploadRecord {
 
     @Override
     public String toString() {
-        return "DownloadRecord{" +
-                "id=" + id +
-                ", userId=" + userId +
+        return "UploadRecord{" +
+                "id=" + getId() +
+                ", userId=" + getUserId() +
                 ", resId=" + resId +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +

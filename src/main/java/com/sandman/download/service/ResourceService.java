@@ -1,9 +1,11 @@
 package com.sandman.download.service;
 
+import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.ResourceDao;
 import com.sandman.download.entity.*;
 import com.sandman.download.security.SecurityUtils;
 import com.sandman.download.utils.FileUtils;
+import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +105,7 @@ public class ResourceService {
         uploadRecord.setUpdateTime(ZonedDateTime.now());
         uploadRecord.setDelFlag(0);
 
-        uploadRecord = uploadRecordService.createUploadRecord(uploadRecord);//得到保存后的数据,带id
+        uploadRecord.setId(uploadRecordService.createUploadRecord(uploadRecord));//得到保存后的数据的id
         log.info(uploadRecord.toString());//打印日志，看看带不带id
 
         //开始将文件上传到远程服务器
@@ -253,30 +255,32 @@ public class ResourceService {
      *
      * @return the list of entities
      */
-/*    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Map getAllMyResources(Integer pageNumber, Integer size, Long userId, String sortType, String order) {
         log.debug("getAllMyResources page:{},size:{},order:{}",pageNumber,size,order);
         userId = (userId==null)?SecurityUtils.getCurrentUserId():userId;
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
-        size = (size==null || size<0)?10:size;
-        if(sortType==null || "".equals(sortType) || (!"ASC".equals(sortType.toUpperCase()) && !"DESC".equals(sortType.toUpperCase()))){
-            sortType = "DESC";
-        }
-        order = (order==null || "".equals(order) || "null".equals(order))?"createTime":order;
-        Pageable pageable = PageableTools.basicPage(pageNumber,size,new SortDto(sortType,order));//第一页就传page=1
-        Page allResources = resourceRepo.findByUserId(userId,pageable);
+        size = (size==null || size<0)?3:size;
+
+        PageHelper.startPage(pageNumber,size);
+
+        List<Resource> resources = resourceDao.findByUserId(userId);
+        PageBean<Resource> pageBean = new PageBean<>(pageNumber,size,resources.size());
+        pageBean.setItems(resources);
+        List<Resource> result = pageBean.getItems();
+
 
         Map data = new HashMap();//最终返回的map
 
-        data.put("totalRow",allResources.getTotalElements());
-        data.put("totalPage",allResources.getTotalPages());
-        data.put("currentPage",allResources.getNumber()+1);//默认0就是第一页
-        data.put("resourceList",getFileSizeHaveUnit(allResources.getContent()));
+        data.put("totalRow",pageBean.getTotalNumber());
+        data.put("totalPage",pageBean.getTotalPage());
+        data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
+        data.put("resourceList",result);
         return data;
         //return new BaseDto(200,"查询成功!",data);
-    }*/
+    }
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位
      * */

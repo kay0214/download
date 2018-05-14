@@ -61,7 +61,7 @@ public class ResourceController {
     /**
      * GET : get all my resources page.
      */
-/*    @GetMapping("/getAllMyResources")
+    @GetMapping("/getAllMyResources")
     public BaseDto getAllMyResources(Integer pageNumber,Integer size,Long userId,String sortType,String order) {
         log.info("pageNumber：{}，size：{}，userId：{}，sortType：{}，order：{}",pageNumber, size, userId, sortType, order);
         Map data = resourceService.getAllMyResources(pageNumber, size, userId, sortType, order);
@@ -69,7 +69,7 @@ public class ResourceController {
             return new BaseDto(410,"请先登录或者传入id");
         }
         return new BaseDto(200,"查询成功!",data);
-    }*/
+    }
 
     /**
      * GET : get one resource

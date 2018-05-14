@@ -29,12 +29,10 @@ public class UploadRecordService {
     /**
      * 创建一个上传记录
      */
-    public UploadRecord createUploadRecord(UploadRecord uploadRecord) {
+    public Long createUploadRecord(UploadRecord uploadRecord) {
         log.debug("Request to save UploadRecord : {}", uploadRecord);
-        Long id = uploadRecordDao.createUploadRecord(uploadRecord);
-        log.info("id设置之前:{}",id);
-        uploadRecord.setId(id);
-        return uploadRecord;
+        uploadRecordDao.createUploadRecord(uploadRecord);
+        return uploadRecord.getId();
     }
     /**
      * 根据id删除数据

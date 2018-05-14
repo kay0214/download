@@ -1,7 +1,10 @@
 package com.sandman.download.configuration.dbconfig;
 
+import com.github.pagehelper.PageHelper;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
+
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,6 +14,8 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import java.util.Properties;
 
 @Configuration
 // 指定dao的地址，指定sqlSessionFactory的名称
@@ -26,7 +31,21 @@ public class MysqlDataDaoConfig {
     public SqlSessionFactory mysqlSqlSessionFactory(@Qualifier("mysqlDataSource") DataSource mysqlDataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(mysqlDataSource);
+        Interceptor[] plugins =  new Interceptor[]{pageHelper};
+        factoryBean.setPlugins(plugins);
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
         return factoryBean.getObject();
+    }
+    //配置mybatis的分页插件pageHelper
+    @Bean(name = "pageHelper")
+    public PageHelper pageHelper(){
+        PageHelper pageHelper = new PageHelper();
+        Properties properties = new Properties();
+        properties.setProperty("offsetAsPageNum","true");
+        properties.setProperty("rowBoundsWithCount","true");
+        properties.setProperty("reasonable","true");
+        properties.setProperty("dialect","mysql");    //配置mysql数据库的方言
+        pageHelper.setProperties(properties);
+        return pageHelper;
     }
 }

@@ -29,7 +29,7 @@ public class DownloadRecordService {
     /**
      * 创建一个下载记录
      */
-    public DownloadRecord save(Long resId) {
+    public DownloadRecord createDownloadRecord(Long resId) {
         Long userId = SecurityUtils.getCurrentUserId();
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setUserId(userId);
@@ -49,7 +49,7 @@ public class DownloadRecordService {
     /**
      * 获取用户的下载记录（分页）
      */
-    @Transactional(readOnly = true)
+/*    @Transactional(readOnly = true)
     public Map getAllDownloadRecords(Integer pageNumber, Integer size)throws Exception {
         log.debug("Request to get all DownloadRecords");
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -67,7 +67,7 @@ public class DownloadRecordService {
         data.put("resourceList",downloadRecordList);
 
         return data;
-    }
+    }*/
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位
      * */
