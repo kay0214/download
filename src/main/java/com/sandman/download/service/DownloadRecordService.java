@@ -79,7 +79,7 @@ public class DownloadRecordService {
         data.put("totalRow",totalRow);
         data.put("totalPage",pageBean.getTotalPage());
         data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
-        data.put("resourceList",result);
+        data.put("downloadRecordList",result);
         return data;
 
     }
