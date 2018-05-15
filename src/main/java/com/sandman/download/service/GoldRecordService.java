@@ -1,10 +1,12 @@
 package com.sandman.download.service;
 
+import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.GoldRecordDao;
 import com.sandman.download.entity.GoldRecord;
 import com.sandman.download.entity.Resource;
 import com.sandman.download.entity.User;
 import com.sandman.download.security.SecurityUtils;
+import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,24 +43,39 @@ public class GoldRecordService {
     }*/
 
     /**
-     * Get all the resourceRecords.
-     *
-     * @return the list of entities
+     * 获取用户积分明细（分页）
      */
-/*    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Map getAllResourceRecords(Integer pageNumber, Integer size)throws Exception {
         log.debug("Request to get all ResourceRecords");
+        Long userId = SecurityUtils.getCurrentUserId();
+        if(userId==null)
+            return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
         size = (size==null || size<0)?10:size;
-        Pageable pageable = PageableTools.basicPage(pageNumber,size,new SortDto("desc","recordTime"));
-        Page resourceRecordPage = resourceRecordRepository.findAllByUserId(SecurityUtils.getCurrentUserId(),pageable);
-        Map data = new HashMap();
-        data.put("totalRow",resourceRecordPage.getTotalElements());
-        data.put("totalPage",resourceRecordPage.getTotalPages());
-        data.put("currentPage",resourceRecordPage.getNumber()+1);//默认0就是第一页
-        data.put("recordList",resourceRecordPage.getContent());
+
+        String orderBy = "createTime desc";//默认按照createTime降序排序
+
+        Integer totalRow = goldRecordDao.findAllByUserId(userId).size();//查询出数据条数
+
+        PageHelper.startPage(pageNumber,size).setOrderBy(orderBy);
+
+        List<GoldRecord> resources = goldRecordDao.findAllByUserId(userId);//查询出列表（已经分页）
+        PageBean<GoldRecord> pageBean = new PageBean<>(pageNumber,size,totalRow);//这里是为了计算页数，页码
+
+        pageBean.setItems(resources);
+        List<GoldRecord> result = pageBean.getItems();
+
+
+        Map data = new HashMap();//最终返回的map
+
+        data.put("totalRow",totalRow);
+        data.put("totalPage",pageBean.getTotalPage());
+        data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
+        data.put("resourceList",result);
         return data;
-    }*/
+
+    }
 
     /**
      * Get one resourceRecord by id.

@@ -1,9 +1,11 @@
 package com.sandman.download.service;
 
+import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.UploadRecordDao;
 import com.sandman.download.entity.UploadRecord;
 import com.sandman.download.security.SecurityUtils;
 import com.sandman.download.utils.FileUtils;
+import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,23 +49,40 @@ public class UploadRecordService {
     }
 
     /**
-     * Get all the uploadRecords page.
+     * 根据userId获取记录
      */
     @Transactional(readOnly = true)
-    public Map getAllUploadRecords(Integer pageNumber, Integer size)throws Exception {
-        return null;
-/*        log.debug("Request to get all UploadRecords");
+    public Map getAllUploadRecords(Integer pageNumber, Integer size){
+
+        Long userId = SecurityUtils.getCurrentUserId();
+        if(userId==null)
+            return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
         size = (size==null || size<0)?10:size;
-        Pageable pageable = PageableTools.basicPage(pageNumber,size,new SortDto("desc","recordTime"));
-        Page<UploadRecord> uploadRecordPage = uploadRecordRepository.findAllByUserId(SecurityUtils.getCurrentUserId(),pageable);
-        Map data = new HashMap();
-        data.put("totalRow",uploadRecordPage.getTotalElements());
-        data.put("totalPage",uploadRecordPage.getTotalPages());
-        data.put("currentPage",uploadRecordPage.getNumber()+1);//默认0就是第一页
-        data.put("resourceList",getFileSizeHaveUnit(uploadRecordPage.getContent()));
 
-        return data;*/
+        String orderBy = "createTime desc";//默认按照createTime降序排序
+
+        Integer totalRow = uploadRecordDao.findAllByUserId(userId).size();//查询出数据条数
+
+        PageHelper.startPage(pageNumber,size).setOrderBy(orderBy);
+
+        List<UploadRecord> resources = uploadRecordDao.findAllByUserId(userId);//查询出列表（已经分页）
+        PageBean<UploadRecord> pageBean = new PageBean<>(pageNumber,size,totalRow);//这里是为了计算页数，页码
+
+        pageBean.setItems(resources);
+        List<UploadRecord> result = pageBean.getItems();
+
+        result.forEach(uploadRecord -> {
+            log.info(uploadRecord.toString());
+        });
+        Map data = new HashMap();//最终返回的map
+
+        data.put("totalRow",totalRow);
+        data.put("totalPage",pageBean.getTotalPage());
+        data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
+        data.put("resourceList",result);
+        return data;
+
     }
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位

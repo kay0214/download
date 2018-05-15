@@ -25,9 +25,16 @@
         where id=#{id}
     </update>
     <select id="findByUserId" parameterType="Long" resultType="com.sandman.download.entity.Resource">
-        select * from resource where userId=#{userId} and delFlag=0
+        select * from resource where userId=#{userId} and delFlag=0 ORDER BY createTime DESC
+    </select>
+    <select id="getCountByUserId" parameterType="Long" resultType="Integer">
+        select count(*) from resource where userId=#{userId} and delFlag=0
+    </select>
+    <select id="findManyResourcesByFuzzy" parameterType="String" resultType="com.sandman.download.entity.Resource">
+        select * from resource where delFlag=0 and (resName like CONCAT('%',#{searchContent},'%') or resDesc like CONCAT('%',#{searchContent},'%'))
     </select>
     <select id="findById" parameterType="Long" resultType="com.sandman.download.entity.Resource">
         select * from resource where id=#{id} and delFlag=0
     </select>
+
 </mapper>

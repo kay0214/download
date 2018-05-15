@@ -1,9 +1,11 @@
 package com.sandman.download.service;
 
 
+import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.DownloadRecordDao;
 import com.sandman.download.entity.DownloadRecord;
 import com.sandman.download.security.SecurityUtils;
+import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,25 +51,38 @@ public class DownloadRecordService {
     /**
      * 获取用户的下载记录（分页）
      */
-/*    @Transactional(readOnly = true)
-    public Map getAllDownloadRecords(Integer pageNumber, Integer size)throws Exception {
+    @Transactional(readOnly = true)
+    public Map getAllDownloadRecords(Integer pageNumber, Integer size){
         log.debug("Request to get all DownloadRecords");
+
+        Long userId = SecurityUtils.getCurrentUserId();
+        if(userId==null)
+            return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
         size = (size==null || size<0)?10:size;
 
-        List<DownloadRecord> downloadRecordList = downloadRecordDao.findAllByUserId(SecurityUtils.getCurrentUserId(),pageNumber,size);
+        String orderBy = "createTime desc";//默认按照createTime降序排序
+
+        Integer totalRow = downloadRecordDao.findAllByUserId(userId).size();//查询出数据条数
+
+        PageHelper.startPage(pageNumber,size).setOrderBy(orderBy);
+
+        List<DownloadRecord> resources = downloadRecordDao.findAllByUserId(userId);//查询出列表（已经分页）
+        PageBean<DownloadRecord> pageBean = new PageBean<>(pageNumber,size,totalRow);//这里是为了计算页数，页码
+
+        pageBean.setItems(resources);
+        List<DownloadRecord> result = pageBean.getItems();
 
 
-        downloadRecordList.forEach(downloadRecord -> {
-            System.out.println(downloadRecord.getRes().getResSize());
-        });
-        Map data = new HashMap();
-        data.put("totalPage",downloadRecordPage.getTotalPages());
-        data.put("currentPage",downloadRecordPage.getNumber()+1);//默认0就是第一页
-        data.put("resourceList",downloadRecordList);
+        Map data = new HashMap();//最终返回的map
 
+        data.put("totalRow",totalRow);
+        data.put("totalPage",pageBean.getTotalPage());
+        data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
+        data.put("resourceList",result);
         return data;
-    }*/
+
+    }
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位
      * */
@@ -85,7 +100,7 @@ public class DownloadRecordService {
         return resourceList;
     }*/
     /**
-     * Delete the downloadRecord by id.
+     * 根据id删除记录（假删）
      */
     public void deleteById(Long id) {
         log.debug("Request to delete download record : {}", id);

@@ -76,4 +76,17 @@ public class PageBean<T> {
     public void setItems(List<T> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "PageBean{" +
+                "currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                ", totalNumber=" + totalNumber +
+                ", totalPage=" + totalPage +
+                ", isMore=" + isMore +
+                ", startIndex=" + startIndex +
+                ", items=" + items +
+                '}';
+    }
 }

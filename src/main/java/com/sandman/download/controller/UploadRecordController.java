@@ -27,12 +27,9 @@ public class UploadRecordController {
     @GetMapping("/getAllRecords")
     public BaseDto getAllUploadRecords(Integer pageNumber, Integer size) {
         log.debug("REST request to get all UploadRecords");
-        Map data = null;
-        try {
-            data = uploadRecordService.getAllUploadRecords(pageNumber, size);
-        } catch (Exception e) {
-            log.info("获取上传记录失败!异常:{}",e);
-        }
+        Map data = uploadRecordService.getAllUploadRecords(pageNumber, size);
+        if(data==null)
+            return new BaseDto(422,"无数据");
         return new BaseDto(200,"请求成功!",data);
     }
 }

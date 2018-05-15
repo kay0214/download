@@ -25,7 +25,7 @@ public class ResourceController {
     private ResourceService resourceService;
 
     /**
-     * post : upload file
+     * 上传资源
      * */
     @PostMapping("/uploadResource")
     public BaseDto uploadResource(Resource resource, @RequestParam("file")MultipartFile file) throws IOException {
@@ -34,7 +34,7 @@ public class ResourceController {
         return resourceService.uploadRes(resource,file);
     }
     /**
-     * get : download file
+     * 下载资源
      * */
     @GetMapping("/downloadResource")
     public BaseDto downloadResource(Long id,HttpServletResponse response){
@@ -50,21 +50,21 @@ public class ResourceController {
     }
 
     /**
-     * post Updates an existing resource.
+     * 更新资源信息
      */
-/*    @PostMapping("/updateResource")
-    public BaseDto updateResource(ResourceDTO resourceDTO){
-        log.info("resourceDto:{}",resourceDTO.toString());
-        return resourceService.updateResource(resourceDTO);
-    }*/
+    @PostMapping("/updateResource")
+    public BaseDto updateResource(Resource resource){
+        log.info("resource:{}",resource.toString());
+        return resourceService.updateResource(resource);
+    }
 
     /**
-     * GET : get all my resources page.
+     * 根据id获取资源列表（分页）
      */
     @GetMapping("/getAllMyResources")
-    public BaseDto getAllMyResources(Integer pageNumber,Integer size,Long userId,String sortType,String order) {
-        log.info("pageNumber：{}，size：{}，userId：{}，sortType：{}，order：{}",pageNumber, size, userId, sortType, order);
-        Map data = resourceService.getAllMyResources(pageNumber, size, userId, sortType, order);
+    public BaseDto getAllMyResources(Integer pageNumber,Integer size,Long userId,String order,String sortType) {
+        log.info("pageNumber：{}，size：{}，userId：{}",pageNumber, size, userId);
+        Map data = resourceService.getAllMyResources(pageNumber, size, userId,order,sortType);
         if(data==null){
             return new BaseDto(410,"请先登录或者传入id");
         }
@@ -72,27 +72,27 @@ public class ResourceController {
     }
 
     /**
-     * GET : get one resource
+     * 根据资源id获取资源
      */
-/*    @GetMapping("/getOneResource")
+    @GetMapping("/getOneResource")
     public BaseDto getOneResource(Long id) {
         log.debug("REST request to get one Resource : {}", id);
-        ResourceDTO resourceDTO = resourceService.getOneResource(id);
-        if(resourceDTO!=null)
-            return new BaseDto(200,"查询成功!",resourceDTO);
-        return new BaseDto(408,"资源不存在!",resourceDTO);
-    }*/
+        Resource resource = resourceService.getOneResource(id);
+        if(resource!=null)
+            return new BaseDto(200,"查询成功!",resource);
+        return new BaseDto(408,"资源不存在!",resource);
+    }
     /**
      * 按照名称检索资源，查resName、resUrl和resDesc
      * */
-/*    @GetMapping("/getManyResourcesByFuzzy")
+    @GetMapping("/getManyResourcesByFuzzy")
     public BaseDto getManyResourcesByFuzzy(Integer pageNumber,Integer size,String search){//检索资源
         Map data = resourceService.getManyResourcesByFuzzy(pageNumber, size, search);
         return new BaseDto(200,"检索成功!",data);
-    }*/
+    }
 
     /**
-     * DELETE : delete the "id" resource.
+     * 资源删除（假删）
      */
     @GetMapping("/delResource")
     public BaseDto delResource(Long id) {

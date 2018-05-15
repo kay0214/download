@@ -32,4 +32,71 @@
         </if>
         where id=#{id}
     </update>
+    <select id="findAllByUserId" parameterType="Long" resultMap="goldRecordResultMap">
+        select <include refid="goldRecord"/> from goldRecord t,resource r where t.delFlag=0 and t.userId=#{userId} and t.resId=r.id
+    </select>
+    <sql id="goldRecord">
+        t.id as id,
+        t.userId as userId,
+        t.resId as resId,
+        t.resName as resName,
+        t.oriGold as oriGold,
+        t.resGold as resGold,
+        t.curGold as curGold,
+        t.opDesc as opDesc,
+        t.createBy as createBy,
+        t.createTime as createTime,
+        t.updateBy as updateBy,
+        t.updateTime as updateTime,
+        t.delFlag as delFlag,
+        r.id as r_id,
+        r.userId as r_userId,
+        r.userName as r_userName,
+        r.nickName as r_nickName,
+        r.resName as r_resName,
+        r.resUrl as r_resUrl,
+        r.resGold as r_resGold,
+        r.resDesc as r_resDesc,
+        r.resSize as r_resSize,
+        r.resType as r_resType,
+        r.downloadCount as r_downloadCount,
+        r.createBy as r_createBy,
+        r.createTime as r_createTime,
+        r.updateBy as r_updateBy,
+        r.updateTime as r_updateTime,
+        r.delFlag as r_delFlag
+    </sql>
+    <resultMap id="goldRecordResultMap" type="com.sandman.download.entity.GoldRecord">
+        <id property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="resId" column="resId"/>
+        <result property="resName" column="resName"/>
+        <result property="oriGold" column="oriGold"/>
+        <result property="resGold" column="resGold"/>
+        <result property="curGold" column="curGold"/>
+        <result property="opDesc" column="opDesc"/>
+        <result property="createBy" column="createBy"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateBy" column="updateBy"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="delFlag" column="delFlag"/>
+        <association property="resource" javaType="com.sandman.download.entity.Resource">
+            <id property="id" column="r_id"/>
+            <result property="userId" column="r_userId"/>
+            <result property="userName" column="r_userName"/>
+            <result property="nickName" column="r_nickName"/>
+            <result property="resName" column="r_resName"/>
+            <result property="resUrl" column="r_resUrl"/>
+            <result property="resGold" column="r_resGold"/>
+            <result property="resDesc" column="r_resDesc"/>
+            <result property="resSize" column="r_resSize"/>
+            <result property="resType" column="r_resType"/>
+            <result property="downloadCount" column="r_downloadCount"/>
+            <result property="createBy" column="r_createBy"/>
+            <result property="createTime" column="r_createTime"/>
+            <result property="updateBy" column="r_updateBy"/>
+            <result property="updateTime" column="r_updateTime"/>
+            <result property="delFlag" column="r_delFlag"/>
+        </association>
+    </resultMap>
 </mapper>

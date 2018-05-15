@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Repository
 public interface DownloadRecordDao {
-    public List<DownloadRecord> findAllByUserId(Long userId,Integer pageNumber,Integer size);
+    public List<DownloadRecord> findAllByUserId(Long userId);
     public Long createDownloadRecord(DownloadRecord downloadRecord);
     public void deleteById(DownloadRecord downloadRecord);//假删
 }

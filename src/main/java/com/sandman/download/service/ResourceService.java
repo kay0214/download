@@ -39,7 +39,7 @@ public class ResourceService {
     private ResourceDao resourceDao;
 
     /**
-     * upload resource
+     * 上传资源
      * */
     public BaseDto uploadRes(Resource resource, MultipartFile file){//上传不用修改USER表，所以直接拿过来登录信息就可以了
         if(file.isEmpty()){
@@ -124,11 +124,6 @@ public class ResourceService {
      * */
     private boolean resourceExist(String resName,MultipartFile file){
 
-/*        Resource existResource = resourceRepository.findByResName(resName);
-        if(existResource!=null){
-            log.info("上传的文件已经存在:{}",existResource.toString());
-            return true;
-        }*/
         List<Resource> resourceList = resourceDao.findByUserId(SecurityUtils.getCurrentUserId());
         for(Resource resource:resourceList){
             if(resName.equals(resource.getResName())){
@@ -136,12 +131,6 @@ public class ResourceService {
                 return true;
             }
             String existFileName = FileUtils.getCompleteFileNameByUrl(resource.getResUrl());
-/*            log.info("上传的文件名:{},数据库中的文件名:{},二者是否一致:{}",
-                file.getOriginalFilename(),existFileName,
-                existFileName.equals(file.getOriginalFilename()));
-            log.info("上传文件大小:{},数据库中文件大小:{},二者是否一致:{}",
-                String.valueOf(file.getSize()),resource.getResSize(),
-                resource.getResSize().equals(String.valueOf(file.getSize())));*/
             if(existFileName.equals(file.getOriginalFilename())
                     && resource.getResSize().equals(file.getSize())) {
                 log.info("文件名和文件大小都一样啊:{}",existFileName);
@@ -152,7 +141,7 @@ public class ResourceService {
     }
 
     /**
-     * download resource
+     * 下载资源
      * */
     public BaseDto downloadRes(Long resId,HttpServletResponse response)throws Exception{//下载需要修改USER表，需要再次去数据库查询
         Resource resource = resourceDao.findById(resId);
@@ -223,25 +212,25 @@ public class ResourceService {
         return new BaseDto(200,"下载已完成!");
     }
     /**
-     * update a resource
+     * 更新资源信息
      * */
-    public BaseDto updateResource(Resource resourceDTO){//更新一个resource
-        log.info("update a resource:{}",resourceDTO.getId());
-        Resource oriResource = resourceDao.findById(resourceDTO.getId());
+    public BaseDto updateResource(Resource resource){//更新一个resource
+        log.info("update a resource:{}",resource.getId());
+        Resource oriResource = resourceDao.findById(resource.getId());
         Long resOwnerId = oriResource.getUserId();
         if(!resOwnerId.equals(SecurityUtils.getCurrentUserId())){
             return new BaseDto(405,"无权修改!");
         }
 
-        String resName = resourceDTO.getResName();
+        String resName = resource.getResName();
         if(resName!=null && !"".equals(resName)){
             oriResource.setResName(resName);
         }
-        String resDesc = resourceDTO.getResDesc();
+        String resDesc = resource.getResDesc();
         if(resDesc!=null && !"".equals(resDesc)){
             oriResource.setResDesc(resDesc);
         }
-        oriResource.setResGold(resourceDTO.getResGold());
+        oriResource.setResGold(resource.getResGold());
 
         resourceDao.updateById(oriResource);
 
@@ -251,35 +240,39 @@ public class ResourceService {
     }
 
     /**
-     * Get all my resources.
-     *
-     * @return the list of entities
+     * 根据id获取资源列表（分页）
      */
     @Transactional(readOnly = true)
-    public Map getAllMyResources(Integer pageNumber, Integer size, Long userId, String sortType, String order) {
-        log.debug("getAllMyResources page:{},size:{},order:{}",pageNumber,size,order);
+    public Map getAllMyResources(Integer pageNumber, Integer size, Long userId,String order,String sortType) {
+        log.debug("getAllMyResources pageNumber:{},size:{}",pageNumber,size);
         userId = (userId==null)?SecurityUtils.getCurrentUserId():userId;
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
-        size = (size==null || size<0)?3:size;
+        size = (size==null || size<0)?10:size;
+        if(order==null || "".equals(order)){//默认按照createTime降序排序
+            order = "createTime";//字段
+            sortType = "desc";
+        }
+        String orderBy = order + " " + sortType;
 
-        PageHelper.startPage(pageNumber,size);
+        PageHelper.startPage(pageNumber,size).setOrderBy(orderBy);
 
-        List<Resource> resources = resourceDao.findByUserId(userId);
-        PageBean<Resource> pageBean = new PageBean<>(pageNumber,size,resources.size());
+        List<Resource> resources = resourceDao.findByUserId(userId);//查询出列表（已经分页）
+        Integer totalRow = resourceDao.getCountByUserId(userId);//查询出数据条数
+        PageBean<Resource> pageBean = new PageBean<>(pageNumber,size,totalRow);//这里是为了计算页数，页码
+
         pageBean.setItems(resources);
         List<Resource> result = pageBean.getItems();
 
 
         Map data = new HashMap();//最终返回的map
 
-        data.put("totalRow",pageBean.getTotalNumber());
+        data.put("totalRow",totalRow);
         data.put("totalPage",pageBean.getTotalPage());
         data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
         data.put("resourceList",result);
         return data;
-        //return new BaseDto(200,"查询成功!",data);
     }
     /**
      * 资源大小：存入数据库的时候统一以byte为单位，取出来给前端的时候要做规范 -> 转换成以 B,KB,MB,GB为单位
@@ -299,42 +292,51 @@ public class ResourceService {
     }*/
 
     /**
-     * Get one resource by id.
+     * 根据id查询资源信息
      */
-/*    @Transactional(readOnly = true)
-    public ResourceDTO getOneResource(Long id) {
+    @Transactional(readOnly = true)
+    public Resource getOneResource(Long id) {
         log.debug("Request to get Resource : {}", id);
-        Resource resource = resourceRepository.getOneResourceById(id);
+        Resource resource = resourceDao.findById(id);
         if(resource==null)
             return null;
-        Long fileSize = Long.parseLong(resource.getResSize());
-        resource.setResSize(FileUtils.getFileSize(fileSize));
-        return resourceMapper.toDto(resource);
-        //return new BaseDto(200,"查询成功!",resourceDTO);
-    }*/
+        return resource;
+    }
 
     /**
-     * fuzzy query
+     * 模糊检索资源
      * */
-/*    @Transactional(readOnly = true)
-    public Map getManyResourcesByFuzzy(Integer pageNumber,Integer size,String searchContent){
+    @Transactional(readOnly = true)
+    public Map getManyResourcesByFuzzy(Integer pageNumber,Integer size,String searchContent){//检索这里以后可能需要用到es
+
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
         size = (size==null || size<0)?10:size;
-        searchContent = (null==searchContent)?"":searchContent;//做处理，如果前端直接没有定义searchContent，则将searchContent置为""
-        Pageable pageable = PageableTools.basicPage(pageNumber,size,new SortDto("desc","id"));//使用默认按照id倒叙排序
-        //Page page = resourceRepository.findByResNameContainingOrResDescContainingAndStatus(searchContent,searchContent,1,pageable);
-        Page page = resourceRepo.findManyResourcesByFuzzy(searchContent,pageable);
+
+        String orderBy = "id desc";//默认按照id降序排序
+
+        Integer totalRow = resourceDao.findManyResourcesByFuzzy(searchContent).size();//查询出数据条数
+        log.info("totalRow:::::{}",totalRow);
+        PageHelper.startPage(pageNumber,size).setOrderBy(orderBy);
+
+        List<Resource> resources = resourceDao.findManyResourcesByFuzzy(searchContent);//查询出列表（已经分页）
+
+        PageBean<Resource> pageBean = new PageBean<>(pageNumber,size,totalRow);//这里是为了计算页数，页码
+
+        pageBean.setItems(resources);
+        List<Resource> result = pageBean.getItems();
+
+
         Map data = new HashMap();//最终返回的map
 
-        data.put("totalRow",page.getTotalElements());
-        data.put("totalPage",page.getTotalPages());
-        data.put("currentPage",page.getNumber()+1);//默认0就是第一页
-        data.put("resourceList",getFileSizeHaveUnit(page.getContent()));
+        data.put("totalRow",totalRow);
+        data.put("totalPage",pageBean.getTotalPage());
+        data.put("currentPage",pageBean.getCurrentPage());//默认0就是第一页
+        data.put("resourceList",result);
         return data;
-    }*/
+    }
 
     /**
-     * Delete the resource by id.
+     * 删除资源（假删）
      */
     public BaseDto delResource(Long id) {
         log.debug("Request to delete Resource : {}", id);

@@ -3,11 +3,14 @@ package com.sandman.download.dao.mysql;
 import com.sandman.download.entity.GoldRecord;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by wangj on 2018/5/14.
  */
 @Repository
 public interface GoldRecordDao {
+    public List<GoldRecord> findAllByUserId(Long userId);
     public Long createGoldRecord(GoldRecord goldRecord);
     public void deleteById(GoldRecord goldRecord);//假删
 }

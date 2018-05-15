@@ -1,6 +1,7 @@
 package com.sandman.download.configuration.dbconfig;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInterceptor;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 
@@ -31,21 +32,30 @@ public class MysqlDataDaoConfig {
     public SqlSessionFactory mysqlSqlSessionFactory(@Qualifier("mysqlDataSource") DataSource mysqlDataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(mysqlDataSource);
-        Interceptor[] plugins =  new Interceptor[]{pageHelper};
+        Interceptor[] plugins =  new Interceptor[]{pageInterceptor()};
         factoryBean.setPlugins(plugins);
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
         return factoryBean.getObject();
     }
+    @Bean(name = "pageInterceptor")
+    public PageInterceptor pageInterceptor(){
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        pageInterceptor.setProperties(properties);
+        return pageInterceptor;
+    }
     //配置mybatis的分页插件pageHelper
-    @Bean(name = "pageHelper")
-    public PageHelper pageHelper(){
-        PageHelper pageHelper = new PageHelper();
+/*    @Bean
+    public PageInterceptor pageHelper(){
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        //PageHelper pageHelper = new PageHelper();
         Properties properties = new Properties();
         properties.setProperty("offsetAsPageNum","true");
         properties.setProperty("rowBoundsWithCount","true");
         properties.setProperty("reasonable","true");
         properties.setProperty("dialect","mysql");    //配置mysql数据库的方言
-        pageHelper.setProperties(properties);
-        return pageHelper;
-    }
+        //pageHelper.setProperties(properties);
+        pageInterceptor.setProperties(properties);
+        return pageInterceptor;
+    }*/
 }

@@ -28,11 +28,11 @@ public class GoldRecordController {
     public BaseDto getAllResourceRecords(Integer pageNumber, Integer size) {
         log.debug("REST request to get all ResourceRecords");
         Map data = null;
-/*        try {
+        try {
             data = goldRecordService.getAllResourceRecords(pageNumber, size);
         } catch (Exception e) {
             log.info("获取积分详情失败！异常:{}",e);
-        }*/
+        }
         return new BaseDto(200,"请求成功!",data);
     }
 }

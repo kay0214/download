@@ -27,12 +27,9 @@ public class DownloadRecordController {
     @GetMapping("/getAllDownloadRecords")
     public BaseDto getAllDownloadRecords(Integer pageNumber, Integer size) {
         log.debug("REST request to get all DownloadRecords");
-        Map data = null;
-/*        try {
-            data = downloadRecordService.getAllDownloadRecords(pageNumber, size);
-        } catch (Exception e) {
-            log.info("获取下载记录失败!异常:{}",e);
-        }*/
+        Map data = downloadRecordService.getAllDownloadRecords(pageNumber, size);
+        if(data==null)
+            return new BaseDto(422,"无数据");
         return new BaseDto(200,"请求成功!",data);
     }
 }

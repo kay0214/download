@@ -16,6 +16,7 @@ public class GoldRecord {
     private Long updateBy;
     private ZonedDateTime updateTime;
     private int delFlag;
+    private Resource resource;
 
     public Long getId() {
         return id;
@@ -121,6 +122,14 @@ public class GoldRecord {
         this.delFlag = delFlag;
     }
 
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
     @Override
     public String toString() {
         return "GoldRecord{" +
@@ -137,6 +146,7 @@ public class GoldRecord {
                 ", updateBy=" + updateBy +
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
+                ", resource=" + resource +
                 '}';
     }
 }
