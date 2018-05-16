@@ -18,6 +18,8 @@ public class UserAndAuthService implements UserDetailsService {
     private UserDao userDao;
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        if(SecurityUtils.getCurrentUser()!=null)
+            return SecurityUtils.getCurrentUser();
         System.out.println("userName=" + userName);
         User user = userDao.findByUserName(userName);
         System.out.println(user.toString());
