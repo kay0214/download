@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Created by wangj on 2018/4/25.
+ * Created by sunpeikai on 2018/4/25.
  */
 public class SingleElasticSearchClientConfig {
 

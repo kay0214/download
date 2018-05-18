@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.ZonedDateTime;
 
 /**
- * Created by wangj on 2018/5/4.
+ * Created by sunpeikai on 2018/5/4.
  */
 public class UserDto {
     private Long id;

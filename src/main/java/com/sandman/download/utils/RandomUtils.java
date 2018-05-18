@@ -1,7 +1,7 @@
 package com.sandman.download.utils;
 
 /**
- * Created by wangj on 2018/4/27.
+ * Created by sunpeikai on 2018/4/27.
  */
 public class RandomUtils {
     private static final int CODEMAXLENGTH = 6;

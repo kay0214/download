@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by wangj on 2018/4/17.
+ * Created by sunpeikai on 2018/4/17.
  */
 @Component
 public class SftpParam {

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by wangj on 2018/5/4.
+ * Created by sunpeikai on 2018/5/4.
  */
 @RestController
 @RequestMapping("/api/sandman/v1/user")
@@ -55,11 +55,13 @@ public class UserController {
         return map;
     }
     @PostMapping("/success")
-    public void success(){
+    public BaseDto success(){
         log.info("login success!");
+        return new BaseDto(200,"登录成功!");
     }
     @PostMapping("/login")
-    public void login(){
+    public BaseDto login(){
         log.info("login!");
+        return new BaseDto(200,"hello");
     }
 }

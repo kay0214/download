@@ -3,7 +3,7 @@ package com.sandman.download.utils;
 import com.jcraft.jsch.UserInfo;
 
 /**
- * Created by wangj on 2018/4/17.
+ * Created by sunpeikai on 2018/4/17.
  */
 public class JschUserInfoImpl implements UserInfo {
     @Override

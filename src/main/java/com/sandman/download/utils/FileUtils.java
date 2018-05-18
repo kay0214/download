@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by wangj on 2018/4/16.
+ * Created by sunpeikai on 2018/4/16.
  */
 public class FileUtils {
     private static Map<Integer, String> fileSizeMap = new HashMap<>();

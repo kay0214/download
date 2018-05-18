@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by wangj on 2018/4/26.
+ * Created by sunpeikai on 2018/4/26.
  */
 public class SftpPool{
 

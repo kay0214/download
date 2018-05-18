@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by wangj on 2018/5/14.
+ * Created by sunpeikai on 2018/5/14.
  */
 @RestController
 @RequestMapping("/api/sandman/v1/resource")

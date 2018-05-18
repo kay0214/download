@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * Created by wangj on 2018/4/27.
+ * Created by sunpeikai on 2018/4/27.
  */
 @Service
 public class SendEmailService {

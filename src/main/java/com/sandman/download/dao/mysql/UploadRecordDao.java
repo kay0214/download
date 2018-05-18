@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by wangj on 2018/5/14.
+ * Created by sunpeikai on 2018/5/14.
  */
 @Repository
 public interface UploadRecordDao {

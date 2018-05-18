@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by wangj on 2018/5/4.
+ * Created by sunpeikai on 2018/5/4.
  */
 @RestController
 @RequestMapping("/api/sandman/v1/validateCode")

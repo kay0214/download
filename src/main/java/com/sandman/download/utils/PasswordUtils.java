@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.security.MessageDigest;
 
 /**
- * Created by wangj on 2018/4/20.
+ * Created by sunpeikai on 2018/4/20.
  */
 public class PasswordUtils {
     public static String getSecretPasswordSpring(String oriPassword){

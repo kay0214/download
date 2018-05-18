@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
- * Created by wangj on 2018/4/16.
+ * Created by sunpeikai on 2018/4/16.
  */
 public class NumberUtils {//四舍五入保留小数处理，默认保留2位小数
     /**

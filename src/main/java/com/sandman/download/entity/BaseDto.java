@@ -1,7 +1,7 @@
 package com.sandman.download.entity;
 
 /**
- * Created by wangj on 2018/4/12.
+ * Created by sunpeikai on 2018/4/12.
  */
 public class BaseDto {
     private int code;
