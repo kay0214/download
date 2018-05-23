@@ -44,18 +44,4 @@ public class MysqlDataDaoConfig {
         pageInterceptor.setProperties(properties);
         return pageInterceptor;
     }
-    //配置mybatis的分页插件pageHelper
-/*    @Bean
-    public PageInterceptor pageHelper(){
-        PageInterceptor pageInterceptor = new PageInterceptor();
-        //PageHelper pageHelper = new PageHelper();
-        Properties properties = new Properties();
-        properties.setProperty("offsetAsPageNum","true");
-        properties.setProperty("rowBoundsWithCount","true");
-        properties.setProperty("reasonable","true");
-        properties.setProperty("dialect","mysql");    //配置mysql数据库的方言
-        //pageHelper.setProperties(properties);
-        pageInterceptor.setProperties(properties);
-        return pageInterceptor;
-    }*/
 }

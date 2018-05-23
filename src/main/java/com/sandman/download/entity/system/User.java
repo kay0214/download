@@ -1,13 +1,9 @@
-package com.sandman.download.entity;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+package com.sandman.download.entity.system;
 
 import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.List;
 
-public class User implements UserDetails{
+public class User{
     private Long id;//不可修改
     private String userName;//不可修改
     private String password;//可修改
@@ -16,13 +12,13 @@ public class User implements UserDetails{
     private String email;//可修改
     private int gold;//可修改，用户不可修改
     private int available;//可修改，用户不可修改
+    private String salt;//加密密码的盐,userName + 随机uuid = 盐
+    private List<Role> roleList;
     private Long createBy;//不可修改
     private ZonedDateTime createTime;//不可修改
     private Long updateBy;//可修改
     private ZonedDateTime updateTime;//可修改
     private int delFlag;//可修改，用户不可修改
-    private List<? extends GrantedAuthority> authorities;
-    private Role role;
 
     public Long getId() {
         return id;
@@ -40,34 +36,8 @@ public class User implements UserDetails{
         this.userName = userName;
     }
 
-    @Override
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     public void setPassword(String password) {
@@ -114,6 +84,22 @@ public class User implements UserDetails{
         this.available = available;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -155,23 +141,6 @@ public class User implements UserDetails{
     }
 
     @Override
-    public List<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -182,13 +151,13 @@ public class User implements UserDetails{
                 ", email='" + email + '\'' +
                 ", gold=" + gold +
                 ", available=" + available +
+                ", salt='" + salt + '\'' +
+                ", role=" + roleList +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
-                ", authorities=" + authorities +
-                ", role=" + role +
                 '}';
     }
 }

@@ -22,7 +22,7 @@ public class CorsConfig{
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置你要允许的网站域名，如果全允许则设为 *
-        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("*");
         // 如果要限制 HEADER 或 METHOD 请自行更改
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
@@ -32,19 +32,4 @@ public class CorsConfig{
         bean.setOrder(0);
         return bean;
     }
-
-/*    private CorsConfiguration buildConfig() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*"); // 1 设置访问源地址
-        corsConfiguration.addAllowedHeader("*"); // 2 设置访问源请求头
-        corsConfiguration.addAllowedMethod("*"); // 3 设置访问源请求方法
-        return corsConfiguration;
-    }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("*", buildConfig()); // 4 对接口配置跨域设置
-        return new CorsFilter(source);
-    }*/
 }

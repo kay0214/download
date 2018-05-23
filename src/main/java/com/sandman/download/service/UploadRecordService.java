@@ -3,8 +3,6 @@ package com.sandman.download.service;
 import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.UploadRecordDao;
 import com.sandman.download.entity.UploadRecord;
-import com.sandman.download.security.SecurityUtils;
-import com.sandman.download.utils.FileUtils;
 import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +51,9 @@ public class UploadRecordService {
      */
     @Transactional(readOnly = true)
     public Map getAllUploadRecords(Integer pageNumber, Integer size){
+        Long userId = 7L;
 
-        Long userId = SecurityUtils.getCurrentUserId();
+       // Long userId = SecurityUtils.getCurrentUserId();
         log.info("userId:{}",userId);
         if(userId==null)
             return null;

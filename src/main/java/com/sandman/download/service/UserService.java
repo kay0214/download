@@ -1,12 +1,14 @@
 package com.sandman.download.service;
 
-import com.sandman.download.dao.mysql.UserDao;
+import com.sandman.download.dao.mysql.system.UserDao;
 import com.sandman.download.entity.BaseDto;
-import com.sandman.download.entity.User;
+import com.sandman.download.entity.system.Role;
+import com.sandman.download.entity.system.User;
 import com.sandman.download.entity.ValidateCode;
-import com.sandman.download.security.SecurityUtils;
-import com.sandman.download.utils.DateUtils;
+import com.sandman.download.service.system.RoleService;
 import com.sandman.download.utils.PasswordUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by sunpeikai on 2018/5/4.
@@ -30,6 +30,8 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private ValidateCodeService validateCodeService;
+    @Autowired
+    private RoleService roleService;
     /**
      * create a user account.
      */
@@ -69,7 +71,8 @@ public class UserService {
 
     }
     public User getCurUserInfo(){
-        String userName = SecurityUtils.getCurrentUserName();
+        Subject subject = SecurityUtils.getSubject();
+        String userName = (String) subject.getPrincipal();
         if(userName==null || "".equals(userName))
             return null;
         User currentUser = userDao.findByUserName(userName);
@@ -158,6 +161,10 @@ public class UserService {
      * 根据userName获取User信息
      * */
     public User findUserByUserName(String userName){
-        return userDao.findByUserName(userName);
+        User user = userDao.findByUserName(userName);
+        Long userId = user.getId();
+        List<Role> roleList = roleService.findByUserId(userId);
+        user.setRoleList(roleList);
+        return user;
     }
 }

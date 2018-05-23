@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.sandman.download.dao.mysql.UserDao">
-	<select id="findByUserName" parameterType="java.lang.String" resultType="com.sandman.download.entity.User">
+<mapper namespace="com.sandman.download.dao.mysql.system.UserDao">
+	<select id="findByUserName" parameterType="java.lang.String" resultType="com.sandman.download.entity.system.User">
 		select * from user where delFlag=0 and userName=#{userName}
 	</select>
-	<insert id="createUser" parameterType="com.sandman.download.entity.User">
+	<insert id="createUser" parameterType="com.sandman.download.entity.system.User">
 		insert into user values(null,#{userName},#{password},#{nickName},#{mobile},#{email},#{gold},#{available},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
 	</insert>
-	<update id="updateUser" parameterType="com.sandman.download.entity.User">
+	<update id="updateUser" parameterType="com.sandman.download.entity.system.User">
 		update user set updateTime=#{updateTime}
 		<if test="password != null and password !='' ">
 			,password=#{password}
@@ -35,13 +35,13 @@
 		</if>
 		where id=#{id}
 	</update>
-	<select id="findByEmail" parameterType="com.sandman.download.entity.User" resultType="com.sandman.download.entity.User">
+	<select id="findByEmail" parameterType="com.sandman.download.entity.system.User" resultType="com.sandman.download.entity.system.User">
 		select * from user where delFlag=0 and email=#{email}
 	</select>
-	<select id="findByMobile" parameterType="com.sandman.download.entity.User" resultType="com.sandman.download.entity.User">
+	<select id="findByMobile" parameterType="com.sandman.download.entity.system.User" resultType="com.sandman.download.entity.system.User">
 		select * from user where delFlag=0 and mobile=#{mobile}
 	</select>
-	<select id="findById" parameterType="Long" resultType="com.sandman.download.entity.User">
+	<select id="findById" parameterType="Long" resultType="com.sandman.download.entity.system.User">
 		select * from user where delFlag=0 and id=#{id}
 	</select>
 </mapper>

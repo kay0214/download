@@ -1,19 +1,20 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.system;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Created by sunpeikai on 2018/5/22.
  */
-public class Authority {
+public class Role {
     private Long id;
-    private String authName;
-    private String authorityUrl;
-    private String method;
-    private String authDesc;
+    private String roleName;
+    private Integer roleLevel;
+    private String roleDesc;
+    private List<Permission> permissionList;
     private Long createBy;
     private ZonedDateTime createTime;
-    private Long updateBy;
+    private Long updateBy;//可修改
     private ZonedDateTime updateTime;
     private int delFlag;
 
@@ -25,36 +26,36 @@ public class Authority {
         this.id = id;
     }
 
-    public String getAuthName() {
-        return authName;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setAuthName(String authName) {
-        this.authName = authName;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public String getAuthorityUrl() {
-        return authorityUrl;
+    public Integer getRoleLevel() {
+        return roleLevel;
     }
 
-    public void setAuthorityUrl(String authorityUrl) {
-        this.authorityUrl = authorityUrl;
+    public void setRoleLevel(Integer roleLevel) {
+        this.roleLevel = roleLevel;
     }
 
-    public String getMethod() {
-        return method;
+    public String getRoleDesc() {
+        return roleDesc;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
     }
 
-    public String getAuthDesc() {
-        return authDesc;
+    public List<Permission> getPermissionList() {
+        return permissionList;
     }
 
-    public void setAuthDesc(String authDesc) {
-        this.authDesc = authDesc;
+    public void setPermissionList(List<Permission> permissionList) {
+        this.permissionList = permissionList;
     }
 
     public Long getCreateBy() {
@@ -99,12 +100,12 @@ public class Authority {
 
     @Override
     public String toString() {
-        return "Authority{" +
+        return "Role{" +
                 "id=" + id +
-                ", authName='" + authName + '\'' +
-                ", authorityUrl=" + authorityUrl +
-                ", method='" + method + '\'' +
-                ", authDesc='" + authDesc + '\'' +
+                ", roleName='" + roleName + '\'' +
+                ", roleLevel=" + roleLevel +
+                ", roleDesc='" + roleDesc + '\'' +
+                ", permissionList=" + permissionList +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +

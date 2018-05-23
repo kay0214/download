@@ -1,7 +1,7 @@
 package com.sandman.download.controller;
 
 import com.sandman.download.entity.BaseDto;
-import com.sandman.download.entity.User;
+import com.sandman.download.entity.system.User;
 import com.sandman.download.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +62,11 @@ public class UserController {
     @PostMapping("/login")
     public BaseDto login(){
         log.info("login!");
-        return new BaseDto(200,"hello");
+        return new BaseDto(200,"login");
+    }
+    @PostMapping("/error")
+    public BaseDto error(){
+        log.info("error!");
+        return new BaseDto(200,"error");
     }
 }

@@ -4,7 +4,6 @@ package com.sandman.download.service;
 import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.DownloadRecordDao;
 import com.sandman.download.entity.DownloadRecord;
-import com.sandman.download.security.SecurityUtils;
 import com.sandman.download.utils.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,8 @@ public class DownloadRecordService {
      * 创建一个下载记录
      */
     public DownloadRecord createDownloadRecord(Long resId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = 7L;
+        //Long userId = SecurityUtils.getCurrentUserId();
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setUserId(userId);
         downloadRecord.setResId(resId);
@@ -54,8 +54,9 @@ public class DownloadRecordService {
     @Transactional(readOnly = true)
     public Map getAllDownloadRecords(Integer pageNumber, Integer size){
         log.debug("Request to get all DownloadRecords");
+        Long userId = 7L;
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        //Long userId = SecurityUtils.getCurrentUserId();
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -106,7 +107,7 @@ public class DownloadRecordService {
         log.debug("Request to delete download record : {}", id);
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setId(id);
-        downloadRecord.setUpdateBy(SecurityUtils.getCurrentUserId());
+        downloadRecord.setUpdateBy(1L);
         downloadRecord.setUpdateTime(ZonedDateTime.now());
         downloadRecord.setDelFlag(1);
         downloadRecordDao.deleteById(downloadRecord);
