@@ -4,8 +4,9 @@ package com.sandman.download.service;
 import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.DownloadRecordDao;
 import com.sandman.download.entity.DownloadRecord;
-import com.sandman.download.security.SecurityUtils;
+import com.sandman.download.entity.User;
 import com.sandman.download.utils.PageBean;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class DownloadRecordService {
      * 创建一个下载记录
      */
     public DownloadRecord createDownloadRecord(Long resId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        Long userId = user.getId();
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setUserId(userId);
         downloadRecord.setResId(resId);
@@ -55,7 +57,8 @@ public class DownloadRecordService {
     public Map getAllDownloadRecords(Integer pageNumber, Integer size){
         log.debug("Request to get all DownloadRecords");
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        Long userId = user.getId();
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -103,10 +106,11 @@ public class DownloadRecordService {
      * 根据id删除记录（假删）
      */
     public void deleteById(Long id) {
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
         log.debug("Request to delete download record : {}", id);
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setId(id);
-        downloadRecord.setUpdateBy(SecurityUtils.getCurrentUserId());
+        downloadRecord.setUpdateBy(user.getId());
         downloadRecord.setUpdateTime(ZonedDateTime.now());
         downloadRecord.setDelFlag(1);
         downloadRecordDao.deleteById(downloadRecord);

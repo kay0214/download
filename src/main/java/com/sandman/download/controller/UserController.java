@@ -3,14 +3,16 @@ package com.sandman.download.controller;
 import com.sandman.download.entity.BaseDto;
 import com.sandman.download.entity.User;
 import com.sandman.download.service.UserService;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by sunpeikai on 2018/5/4.
@@ -60,8 +62,18 @@ public class UserController {
         return new BaseDto(200,"登录成功!");
     }
     @PostMapping("/login")
-    public BaseDto login(){
+    public BaseDto login(String username,String password,boolean rememberMe){
         log.info("login!");
+        try{
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            Subject currentUser = SecurityUtils.getSubject();
+            if (!currentUser.isAuthenticated()){
+                token.setRememberMe(rememberMe);
+                currentUser.login(token);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         return new BaseDto(200,"hello");
     }
 }

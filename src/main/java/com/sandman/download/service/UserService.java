@@ -4,21 +4,17 @@ import com.sandman.download.dao.mysql.UserDao;
 import com.sandman.download.entity.BaseDto;
 import com.sandman.download.entity.User;
 import com.sandman.download.entity.ValidateCode;
-import com.sandman.download.security.SecurityUtils;
-import com.sandman.download.utils.DateUtils;
 import com.sandman.download.utils.PasswordUtils;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by sunpeikai on 2018/5/4.
@@ -69,10 +65,7 @@ public class UserService {
 
     }
     public User getCurUserInfo(){
-        String userName = SecurityUtils.getCurrentUserName();
-        if(userName==null || "".equals(userName))
-            return null;
-        User currentUser = userDao.findByUserName(userName);
+        User currentUser = (User)SecurityUtils.getSubject().getPrincipal();
         currentUser.setPassword(null);
         currentUser.setMobile(null);
         currentUser.setEmail(null);

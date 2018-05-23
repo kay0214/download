@@ -5,8 +5,8 @@ import com.sandman.download.dao.mysql.GoldRecordDao;
 import com.sandman.download.entity.GoldRecord;
 import com.sandman.download.entity.Resource;
 import com.sandman.download.entity.User;
-import com.sandman.download.security.SecurityUtils;
 import com.sandman.download.utils.PageBean;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,8 @@ public class GoldRecordService {
     @Transactional(readOnly = true)
     public Map getAllResourceRecords(Integer pageNumber, Integer size)throws Exception {
         log.debug("Request to get all ResourceRecords");
-        Long userId = SecurityUtils.getCurrentUserId();
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        Long userId = user.getId();
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -96,10 +97,11 @@ public class GoldRecordService {
      * @param id the id of the entity
      */
     public void deleteById(Long id) {
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
         log.debug("Request to delete ResourceRecord : {}", id);
         GoldRecord goldRecord = new GoldRecord();
         goldRecord.setId(id);
-        goldRecord.setUpdateBy(SecurityUtils.getCurrentUserId());//用户操作
+        goldRecord.setUpdateBy(user.getId());//用户操作
         goldRecord.setUpdateTime(ZonedDateTime.now());
         goldRecord.setDelFlag(1);
         goldRecordDao.deleteById(goldRecord);//假删

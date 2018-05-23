@@ -1,128 +1,80 @@
 package com.sandman.download.configuration.security;
 
-import com.sandman.download.security.AuthoritiesConstants;
-import com.sandman.download.security.UserAndAuthService;
-import com.sandman.download.security.jwt.JWTConfigurer;
-import com.sandman.download.security.jwt.TokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.servlet.Filter;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
-import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
-@Import(SecurityProblemSupport.class)
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    SessionRegistry sessionRegistry;
-    @Autowired
-    private UserAndAuthService userAndAuthService;
-    @Autowired
-    private SecurityProblemSupport problemSupport;
-    @Autowired
-    private TokenProvider tokenProvider;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+public class SpringSecurityConfig{
+    /**
+     * securityManager
+     * @return
+     */
+    @Bean(name = "securityManager")
+    public DefaultWebSecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(myRealm());
+        securityManager.setCacheManager(new MemoryConstrainedCacheManager());
+        securityManager.setSubjectFactory(new DefaultWebSubjectFactory());
+        return securityManager;
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .antMatchers("/app/**/*.{js,html}")
-                .antMatchers("/bower_components/**")
-                .antMatchers("/i18n/**")
-                .antMatchers("/content/**")
-                .antMatchers("/swagger-ui/index.html")
-                .antMatchers("/test/**")
-                .antMatchers("/h2-console/**")/*.antMatchers("/api/sandman/v1/user/login")*/;
+    /**
+     * Realm 用于获取用户认证信息以及权限信息
+     * shiro有几个默认的，默认Realm如果不能满足要求需要自定义
+     * @return
+     */
+    @Bean(name = "myRealm")
+    public Realm myRealm(){
+        return new MyRealm();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf()
-                .disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
-                .and()
-                .headers()
-                .frameOptions()
-                .disable()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/sandman/v1/user/createUser").permitAll()//用户注册->开放接口
-                .antMatchers(" /api/sandman/v1/uploadRecord/getAllRecords").authenticated()//用户查看上传记录，只能查看自己的
-                .antMatchers(" /api/sandman/v1/downloadRecord/getAllDownloadRecords").authenticated()//用户查看下载记录，只能查看自己的
-                .antMatchers(" /api/sandman/v1/resourceRecord/getAllResourceRecord").authenticated()//用户查看积分明细，只能查看自己的
-                .antMatchers(" /api/sandman/v1/resource/updateResource").authenticated()//用户更新自己的资源信息，所以要登录
-                .antMatchers("/api/sandman/v1/resource/uploadResource").authenticated()//用户上传资源，需要登录
-                .antMatchers("/api/sandman/v1/resource/downloadResource").authenticated()//用户下载资源，需要登录
-                .antMatchers(" /api/sandman/v1/resource/getAllMyResources").permitAll()//查看资源列表，开放接口无需登录
-                .antMatchers("/api/sandman/v1/resource/delResource").authenticated()//资源假删，需要登录，自己上传的资源才有权删除
-                .antMatchers("/api/sandman/v1/resource/getManyResourcesByFuzzy").permitAll()//资源检索，输入框查询，无需登录
-                .antMatchers("/api/sandman/v1/resource/getOneResource").permitAll()//查看资源详情，无需登录
-                .antMatchers("/management/health").permitAll()
-                .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                .antMatchers("/swagger-resources/configuration/ui").permitAll()
+    /**
+     * Shiro Config
+     * @return
+     */
+    @Bean(name = "shiroFilter")
+    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        //Login
+        String loginUrl = "";
+        shiroFilterFactoryBean.setLoginUrl(loginUrl);
 
-                .and()
-                .formLogin()
-                .loginPage("http://localhost:8080/login")
-                .loginProcessingUrl("/api/sandman/v1/user/login")//登录接口
-                .successForwardUrl("/api/sandman/v1/user/success")
-                //.successHandler()
-                //.defaultSuccessUrl("/api/sandman/v1/user/success",true)
-                .failureForwardUrl("/api/sandman/v1/user/error")//登录失败页面
-                //.defaultSuccessUrl("/api/sandman/v1/user/login")//登录成功页面
-                .and()
-                .logout()
-                .logoutUrl("/api/sandman/v1/user/logout").permitAll()//登出接口
-                .logoutSuccessUrl("/api/sandman/v1/user/logoutSuccess")//登出成功页面
-                .and()/**/
-                .apply(securityConfigurerAdapter());
-        //.antMatchers("/api/**").authenticated()
-    }
+        //Shiro内的filter配置
+        Map<String, Filter> filters = new HashMap<>();
 
-    private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider);
-    }
+        //定义logoutFilter并添加
+        LogoutFilter logoutFilter = new LogoutFilter();
+        logoutFilter.setRedirectUrl("");
+        filters.put("logout",logoutFilter);
+        //添加到shiro chain里
+        shiroFilterFactoryBean.setFilters(filters);
 
-    @Bean
-    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-        return new SecurityEvaluationContextExtension();
-    }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userAndAuthService).passwordEncoder(passwordEncoder());
-    }
+        //配置拦截规则
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/logout.do","logout");
+        filterChainDefinitionMap.put("/casReturn.do","authc");
+        filterChainDefinitionMap.put("/**/*.js","anon");
+        filterChainDefinitionMap.put("/assets/**","anon");
+        filterChainDefinitionMap.put("/css/**","anon");
+        filterChainDefinitionMap.put("/images/**","anon");
+        filterChainDefinitionMap.put("/js/**","anon");
+        filterChainDefinitionMap.put("/api/sandman/v1/user/login","anon");
 
-    @Bean
-    public SessionRegistry getSessionRegistry() {
-        SessionRegistry sessionRegistry = new SessionRegistryImpl();
-        return sessionRegistry;
+        filterChainDefinitionMap.put("/**", "authc");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        System.out.println("Shiro拦截器工厂类注入成功");
+        return shiroFilterFactoryBean;
     }
 }

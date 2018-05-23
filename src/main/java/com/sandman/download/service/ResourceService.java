@@ -3,22 +3,21 @@ package com.sandman.download.service;
 import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.ResourceDao;
 import com.sandman.download.entity.*;
-import com.sandman.download.security.SecurityUtils;
 import com.sandman.download.utils.FileUtils;
 import com.sandman.download.utils.PageBean;
+import java.io.File;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sunpeikai on 2018/5/14.
@@ -53,11 +52,12 @@ public class ResourceService {
         if(resource.getResDesc().length()<10)
             return new BaseDto(421,"资源描述必须10个字符以上");
         //开始做用户资源记录
-        Long userId = SecurityUtils.getCurrentUserId();//登录的时候保存的信息，不用再次查询数据库
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        Long userId = user.getId();//登录的时候保存的信息，不用再次查询数据库
 
         resource.setUserId(userId);//设置UserId给resource
-        resource.setUserName(SecurityUtils.getCurrentUserName());//设置资源所属用户
-        resource.setNickName(SecurityUtils.getCurrentNickName());//设置资源所属用户的昵称
+        resource.setUserName(user.getUserName());//设置资源所属用户
+        resource.setNickName(user.getNickName());//设置资源所属用户的昵称
 
         String fileType = FileUtils.getSuffixNameByFileName(file.getOriginalFilename());
         fileType = (fileType==null || "".equals(fileType))?"file":fileType;//如果utils给出的文件类型为null，将file赋值给fileType
@@ -123,8 +123,8 @@ public class ResourceService {
      * 根据resName和fileName判断用户正在上传的资源是否已经存在在该用户下
      * */
     private boolean resourceExist(String resName,MultipartFile file){
-
-        List<Resource> resourceList = resourceDao.findByUserId(SecurityUtils.getCurrentUserId());
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        List<Resource> resourceList = resourceDao.findByUserId(user.getId());
         for(Resource resource:resourceList){
             if(resName.equals(resource.getResName())){
                 log.info("上传的文件已经存在:{}",resource.toString());
@@ -154,7 +154,7 @@ public class ResourceService {
         log.info("resource:{}",resource.toString());
         User resOwner = userService.findOne(resource.getUserId());//根据userId查询出资源拥有者
 
-        User curUser = userService.findUserByUserName(SecurityUtils.getCurrentUserName());//根据用户名查询出当前登录的用户
+        User curUser = (User)SecurityUtils.getSubject().getPrincipal();//根据用户名查询出当前登录的用户
 
         if(!curUser.getId().equals(resOwner.getId())){//当前登录用户与资源拥有者不是同一人
             log.info("上传下载不同人");
@@ -218,7 +218,8 @@ public class ResourceService {
         log.info("update a resource:{}",resource.getId());
         Resource oriResource = resourceDao.findById(resource.getId());
         Long resOwnerId = oriResource.getUserId();
-        if(!resOwnerId.equals(SecurityUtils.getCurrentUserId())){
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        if(!resOwnerId.equals(user.getId())){
             return new BaseDto(405,"无权修改!");
         }
 
@@ -245,7 +246,8 @@ public class ResourceService {
     @Transactional(readOnly = true)
     public Map getAllMyResources(Integer pageNumber, Integer size, Long userId,String order,String sortType) {
         log.debug("getAllMyResources pageNumber:{},size:{}",pageNumber,size);
-        userId = (userId==null)?SecurityUtils.getCurrentUserId():userId;
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        userId = (userId==null)?user.getId():userId;
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -344,7 +346,8 @@ public class ResourceService {
         if(tempRes==null){
             return new BaseDto(408,"资源不存在!");
         }
-        if(!tempRes.getUserId().equals(SecurityUtils.getCurrentUserId())){
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        if(!tempRes.getUserId().equals(user.getId())){
             return new BaseDto(406,"无权删除!");
         }
 

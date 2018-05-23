@@ -3,19 +3,18 @@ package com.sandman.download.service;
 import com.github.pagehelper.PageHelper;
 import com.sandman.download.dao.mysql.UploadRecordDao;
 import com.sandman.download.entity.UploadRecord;
-import com.sandman.download.security.SecurityUtils;
-import com.sandman.download.utils.FileUtils;
+import com.sandman.download.entity.User;
 import com.sandman.download.utils.PageBean;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Service Implementation for managing UploadRecord.
@@ -54,7 +53,8 @@ public class UploadRecordService {
     @Transactional(readOnly = true)
     public Map getAllUploadRecords(Integer pageNumber, Integer size){
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        User user = (User)SecurityUtils.getSubject().getPrincipal();
+        Long userId = user.getId();
         log.info("userId:{}",userId);
         if(userId==null)
             return null;
