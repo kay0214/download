@@ -24,10 +24,10 @@ public class MyRealm extends AuthorizingRealm
 		String password = String.valueOf(usernamePasswordToken.getPassword());
 		User user = userDao.findByUserName(userName);
 		if(user == null){
-			return null;
+			throw new UnknownAccountException();
 		}
 		if(!user.getPassword().equals(password)){
-			return null;
+			throw new IncorrectCredentialsException();
 		}
 		// 这里我设置的principal传的是user实体
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,password,this.getName());

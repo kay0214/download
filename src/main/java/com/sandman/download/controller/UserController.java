@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -71,8 +73,10 @@ public class UserController {
                 token.setRememberMe(rememberMe);
                 currentUser.login(token);
             }
-        }catch(Exception ex){
-            ex.printStackTrace();
+        } catch (UnknownAccountException uae) {
+            log.info("username wasn't in the system.");
+        } catch (IncorrectCredentialsException ice) {
+            log.info("password didn't match.");
         }
         return new BaseDto(200,"hello");
     }
