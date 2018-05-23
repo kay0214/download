@@ -55,6 +55,7 @@ public class UploadRecordService {
     public Map getAllUploadRecords(Integer pageNumber, Integer size){
 
         Long userId = SecurityUtils.getCurrentUserId();
+        log.info("userId:{}",userId);
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;

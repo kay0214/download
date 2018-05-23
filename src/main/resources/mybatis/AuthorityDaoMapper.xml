@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.sandman.download.dao.mysql.AuthorityDao">
+
+	<select id="findByUserId" parameterType="Long" resultType="com.sandman.download.entity.Authority">
+		select a.*
+		from user u
+		LEFT JOIN userRole ur on u.id= ur.userId
+		LEFT JOIN role r on ur.roleId=r.id
+		LEFT JOIN roleAuth ra on ra.roleId=r.id
+		LEFT JOIN authority a on a.id =ra.authId
+		where delFlag=0 and u.id=#{userId}
+	</select>
+
+</mapper>

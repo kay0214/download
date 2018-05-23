@@ -67,4 +67,16 @@ public class CurrentUser extends User {
     public void setGold(int gold) {
         this.gold = gold;
     }
+
+    @Override
+    public String toString() {
+        return "CurrentUser{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", email='" + email + '\'' +
+                ", gold=" + gold +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.sandman.download.security;
 
+import com.sandman.download.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +20,18 @@ public final class SecurityUtils {
     /**
      * 返回当前用户
      * */
-    public static CurrentUser getCurrentUser(){
+    public static User getCurrentUser(){
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
-        CurrentUser currentUser = null;
+        User currentUser = null;
         if (authentication != null) {
-            if (authentication.getPrincipal() instanceof CurrentUser) {
-                currentUser = (CurrentUser) authentication.getPrincipal();
+            System.out.println("authentication != null");
+            System.out.println("authentication：：：：：" + authentication.toString());
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                System.out.println("authentication.getPrincipal() instanceof UserDetails");
+                currentUser = (User) authentication.getPrincipal();
+                System.out.println("authentication:::::::" + authentication.toString());
+                System.out.println("getCurrentUser::::::::currentUser=====" + currentUser.toString());
             }
         }
         return currentUser;

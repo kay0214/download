@@ -1,17 +1,18 @@
 package com.sandman.download.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.ZonedDateTime;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class User {
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
+
+public class User implements UserDetails{
     private Long id;//不可修改
     private String userName;//不可修改
-    //@JsonIgnore
     private String password;//可修改
     private String nickName;//可修改
-    //@JsonIgnore
     private String mobile;//可修改
-    //@JsonIgnore
     private String email;//可修改
     private int gold;//可修改，用户不可修改
     private int available;//可修改，用户不可修改
@@ -20,6 +21,8 @@ public class User {
     private Long updateBy;//可修改
     private ZonedDateTime updateTime;//可修改
     private int delFlag;//可修改，用户不可修改
+    private List<? extends GrantedAuthority> authorities;
+    private Role role;
 
     public Long getId() {
         return id;
@@ -37,8 +40,34 @@ public class User {
         this.userName = userName;
     }
 
+    @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
@@ -126,6 +155,23 @@ public class User {
     }
 
     @Override
+    public List<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -141,6 +187,8 @@ public class User {
                 ", updateBy=" + updateBy +
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
+                ", authorities=" + authorities +
+                ", role=" + role +
                 '}';
     }
 }
