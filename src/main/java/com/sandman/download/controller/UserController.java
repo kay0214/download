@@ -3,9 +3,12 @@ package com.sandman.download.controller;
 import com.sandman.download.entity.common.BaseDto;
 import com.sandman.download.entity.system.User;
 import com.sandman.download.service.system.UserService;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,10 @@ public class UserController {
     }
     @GetMapping("/getCurUserInfo")
     public BaseDto getCurUserInfo(){
+        boolean isPermitted = ShiroSecurityUtils.isPermitted("getCurUserInfo");
+        Subject currentSubject = ShiroSecurityUtils.getCurrentSubject();
+        log.info("user[{}] has permission[getCurUserInfo]:::{}",ShiroSecurityUtils.getCurrentUserName(),isPermitted);
+        log.info("has role[USER]:::{};has role[ADMIN]::::{}",currentSubject.hasRole("USER"),currentSubject.hasRole("ADMIN"));
         User user = userService.getCurUserInfo();
         if(user!=null){
             return new BaseDto(200,"查询成功!",user);
@@ -63,41 +70,29 @@ public class UserController {
         log.info("login success!");
         return new BaseDto(200,"登录成功!");
     }
+    @PostMapping("/error")
+    public BaseDto error(){
+        log.info("login error!");
+        return new BaseDto(200,"登录失败!");
+    }
     @PostMapping("/login")
     public BaseDto login(String username, String password, boolean rememberMe){
         log.info("login!!!!!username:{},password:{},remeberMe:{}",username,password,rememberMe);
         UsernamePasswordToken token = null;
-        String msg = "";
         try{
             token = new UsernamePasswordToken(username, password);
             Subject currentUser = SecurityUtils.getSubject();
             if (!currentUser.isAuthenticated()){
+                log.info("准备进行登录验证!");
                 token.setRememberMe(rememberMe);
                 currentUser.login(token);
             }
 
         } catch (IncorrectCredentialsException e) {
-            msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
-            System.out.println(msg);
-        } catch (ExcessiveAttemptsException e) {
-            msg = "登录失败次数过多";
-            System.out.println(msg);
-        } catch (LockedAccountException e) {
-            msg = "帐号已被锁定. The account for username " + token.getPrincipal() + " was locked.";
-            System.out.println(msg);
-        } catch (DisabledAccountException e) {
-            msg = "帐号已被禁用. The account for username " + token.getPrincipal() + " was disabled.";
-            System.out.println(msg);
-        } catch (ExpiredCredentialsException e) {
-            msg = "帐号已过期. the account for username " + token.getPrincipal() + "  was expired.";
-            System.out.println(msg);
+            return new BaseDto(411,"登录密码错误");
         } catch (UnknownAccountException e) {
-            msg = "帐号不存在. There is no user with username of " + token.getPrincipal();
-            System.out.println(msg);
-        } catch (UnauthorizedException e) {
-            msg = "您没有得到相应的授权！" + e.getMessage();
-            System.out.println(msg);
+            return new BaseDto(423,"用户不存在");
         }
-        return new BaseDto(200,msg);
+        return new BaseDto(200,"登录成功");
     }
 }

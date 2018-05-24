@@ -156,7 +156,7 @@ public class User implements Serializable{
                 ", gold=" + gold +
                 ", available=" + available +
                 ", salt='" + salt + '\'' +
-                ", role=" + roleList +
+                ", roleList=" + roleList +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +

@@ -85,9 +85,11 @@ public class ShiroSecurityConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
         //Login
-        String loginUrl = "";
+        //String loginUrl = "http://www.baidu.com";
+        String loginUrl = "http://39.104.80.30/login";
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
-
+        //shiroFilterFactoryBean.setSuccessUrl("/api/sandman/v1/user/success");
+        shiroFilterFactoryBean.setUnauthorizedUrl("http://39.104.80.30/login");
         //Shiro内的filter配置
         Map<String, Filter> filters = new HashMap<>();
 
@@ -112,7 +114,6 @@ public class ShiroSecurityConfig {
         filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-        System.out.println("Shiro拦截器工厂类注入成功");
         return shiroFilterFactoryBean;
     }
 }

@@ -8,8 +8,11 @@ import org.apache.shiro.subject.Subject;
  * Created by sunpeikai on 2018/5/24.
  */
 public class ShiroSecurityUtils {
+    public static Subject getCurrentSubject(){
+        return SecurityUtils.getSubject();
+    }
     public static User getCurrentUser(){
-        Subject subject = SecurityUtils.getSubject();
+        Subject subject = getCurrentSubject();
         User user = (User) subject.getPrincipal();
         return user;
     }
@@ -72,5 +75,12 @@ public class ShiroSecurityUtils {
         }catch(NullPointerException e){
             return null;
         }
+    }
+    /**
+     * 判断当前用户是否有某个权限
+     * */
+    public static boolean isPermitted(String permission){
+        Subject current = getCurrentSubject();
+        return current.isPermitted(permission);
     }
 }

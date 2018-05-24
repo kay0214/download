@@ -72,9 +72,9 @@ public class UploadRecordService {
         pageBean.setItems(resources);
         List<UploadRecord> result = pageBean.getItems();
 
-        result.forEach(uploadRecord -> {
+/*        result.forEach(uploadRecord -> {
             log.info(uploadRecord.toString());
-        });
+        });*/
         Map data = new HashMap();//最终返回的map
 
         data.put("totalRow",totalRow);

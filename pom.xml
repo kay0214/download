@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>download</name>
+	<name>sandman</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -149,6 +149,7 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
+		<finalName>sandman</finalName>
 	</build>
 
 

@@ -2,6 +2,7 @@ package com.sandman.download.service.system;
 
 import com.sandman.download.dao.mysql.system.UserDao;
 import com.sandman.download.entity.common.BaseDto;
+import com.sandman.download.entity.system.Permission;
 import com.sandman.download.entity.system.Role;
 import com.sandman.download.entity.system.User;
 import com.sandman.download.entity.user.ValidateCode;
@@ -32,6 +33,8 @@ public class UserService {
     private ValidateCodeService validateCodeService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
     /**
      * 注册用户
      */
@@ -162,9 +165,16 @@ public class UserService {
      * */
     public User findUserByUserName(String userName){
         User user = userDao.findByUserName(userName);
-        Long userId = user.getId();
-        List<Role> roleList = roleService.findByUserId(userId);
-        user.setRoleList(roleList);
-        return user;
+        if(user!=null){//根据userName查询出来的用户不为空
+            Long userId = user.getId();
+            List<Role> roleList = roleService.findByUserId(userId);
+            for(Role role:roleList){
+                List<Permission> permissionList = permissionService.findByRoleId(role.getId());
+                role.setPermissionList(permissionList);
+            }
+            user.setRoleList(roleList);
+            return user;
+        }
+        return null;
     }
 }
