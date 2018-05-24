@@ -6,10 +6,9 @@ import com.sandman.download.entity.system.Role;
 import com.sandman.download.entity.system.User;
 import com.sandman.download.entity.user.ValidateCode;
 import com.sandman.download.service.user.ValidateCodeService;
-import com.sandman.download.utils.PasswordUtils;
+import com.sandman.download.utils.PasswordEncrypt;
+import com.sandman.download.utils.RandomUtils;
 import com.sandman.download.utils.ShiroSecurityUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class UserService {
     @Autowired
     private RoleService roleService;
     /**
-     * create a user account.
+     * 注册用户
      */
     public BaseDto createUser(User user,String validateCode) {
         log.info("Request to save User : {}，validateCode:{}", user,validateCode);
@@ -54,8 +53,8 @@ public class UserService {
         if(!verifySuccess)//校验失败return，否则继续往下走
             return new BaseDto(417,"验证码不正确!",user);
         //所有校验已经完成，创建用户
-
-        user.setPassword(PasswordUtils.getSecretPasswordSpring(user.getPassword()));//密码加密
+        user.setSalt(user.getUserName() + RandomUtils.getUuidStr());//用户盐 = userName + 随机uuid
+        user.setPassword(PasswordEncrypt.getEncryptedPwdBySalt(user.getPassword(),user.getSalt()));//密码加密 use salt
         user.setGold(0);
         user.setAvailable(1);
         user.setCreateBy(1L);//1:系统注册
