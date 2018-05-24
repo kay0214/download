@@ -1,8 +1,12 @@
 package com.sandman.download.entity;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class Resource {
+public class Resource implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private Long userId;
     private String userName;//这里需要改造，直接用User代替userName

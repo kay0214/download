@@ -1,11 +1,15 @@
 package com.sandman.download.entity.system;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
  * Created by sunpeikai on 2018/5/23.
  */
-public class Permission {
+public class Permission implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String name;
     private String resourceType;//资源类型，[menu|button]

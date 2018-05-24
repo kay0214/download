@@ -1,9 +1,13 @@
 package com.sandman.download.entity.system;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class User{
+public class User implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;//不可修改
     private String userName;//不可修改
     private String password;//可修改

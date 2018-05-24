@@ -3,6 +3,10 @@ package com.sandman.download.controller;
 import com.sandman.download.entity.BaseDto;
 import com.sandman.download.entity.system.User;
 import com.sandman.download.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ public class UserController {
      * POST : Create a new user.
      */
     @PostMapping("/createUser")
-    public BaseDto createUser(@RequestBody User user,String validateCode) throws URISyntaxException {//这里进行简单校验，在service里面进行复杂校验
+    public BaseDto createUser(@RequestBody User user, String validateCode) throws URISyntaxException {//这里进行简单校验，在service里面进行复杂校验
         log.debug("REST request to save User : {},validateCode:{}", user,validateCode);
         if (user.getId() != null) {
             return new BaseDto(415,"创建用户你带什么ID啊!");
@@ -60,13 +64,42 @@ public class UserController {
         return new BaseDto(200,"登录成功!");
     }
     @PostMapping("/login")
-    public BaseDto login(){
-        log.info("login!");
-        return new BaseDto(200,"login");
-    }
-    @PostMapping("/error")
-    public BaseDto error(){
-        log.info("error!");
-        return new BaseDto(200,"error");
+    public BaseDto login(String username, String password, boolean rememberMe){
+        log.info("login!!!!!username:{},password:{},remeberMe:{}",username,password,rememberMe);
+        UsernamePasswordToken token = null;
+        String msg = "";
+        try{
+            token = new UsernamePasswordToken(username, password);
+            Subject currentUser = SecurityUtils.getSubject();
+            if (!currentUser.isAuthenticated()){
+                log.info("开始进行用户认证!!!!!");
+                token.setRememberMe(rememberMe);
+                currentUser.login(token);
+            }
+            User user = (User) SecurityUtils.getSubject().getPrincipal();
+            System.out.println("User==============" + user.toString());
+        } catch (IncorrectCredentialsException e) {
+            msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
+            System.out.println(msg);
+        } catch (ExcessiveAttemptsException e) {
+            msg = "登录失败次数过多";
+            System.out.println(msg);
+        } catch (LockedAccountException e) {
+            msg = "帐号已被锁定. The account for username " + token.getPrincipal() + " was locked.";
+            System.out.println(msg);
+        } catch (DisabledAccountException e) {
+            msg = "帐号已被禁用. The account for username " + token.getPrincipal() + " was disabled.";
+            System.out.println(msg);
+        } catch (ExpiredCredentialsException e) {
+            msg = "帐号已过期. the account for username " + token.getPrincipal() + "  was expired.";
+            System.out.println(msg);
+        } catch (UnknownAccountException e) {
+            msg = "帐号不存在. There is no user with username of " + token.getPrincipal();
+            System.out.println(msg);
+        } catch (UnauthorizedException e) {
+            msg = "您没有得到相应的授权！" + e.getMessage();
+            System.out.println(msg);
+        }
+        return new BaseDto(200,msg);
     }
 }

@@ -1,6 +1,5 @@
 package com.sandman.download.configuration.dbconfig;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInterceptor;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
@@ -8,6 +7,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,13 +29,19 @@ public class MysqlDataDaoConfig {
     }
 
     @Bean(name = "mysqlSqlSessionFactory")
-    public SqlSessionFactory mysqlSqlSessionFactory(@Qualifier("mysqlDataSource") DataSource mysqlDataSource) throws Exception {
+    public SqlSessionFactory mysqlSqlSessionFactory() throws Exception {
+        /*@Qualifier("mysqlDataSource") DataSource mysqlDataSource*/
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(mysqlDataSource);
+        factoryBean.setDataSource(mysqlDataSource());
         Interceptor[] plugins =  new Interceptor[]{pageInterceptor()};
         factoryBean.setPlugins(plugins);
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
         return factoryBean.getObject();
+    }
+    @Bean(name = "sqlSessionTemplate")
+    public SqlSessionTemplate sqlSessionTemplate() throws Exception {
+        SqlSessionTemplate template = new SqlSessionTemplate(mysqlSqlSessionFactory()); // 使用上面配置的Factory
+        return template;
     }
     @Bean(name = "pageInterceptor")
     public PageInterceptor pageInterceptor(){

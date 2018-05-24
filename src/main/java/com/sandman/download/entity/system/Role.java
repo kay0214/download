@@ -1,12 +1,16 @@
 package com.sandman.download.entity.system;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
  * Created by sunpeikai on 2018/5/22.
  */
-public class Role {
+public class Role implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String roleName;
     private Integer roleLevel;

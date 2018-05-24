@@ -1,8 +1,12 @@
 package com.sandman.download.entity;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class ValidateCode {
+public class ValidateCode implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String contact;
     private String code;
