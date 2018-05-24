@@ -1,4 +1,4 @@
-package com.sandman.download.service;
+package com.sandman.download.service.common;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

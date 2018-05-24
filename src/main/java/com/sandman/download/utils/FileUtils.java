@@ -2,7 +2,7 @@ package com.sandman.download.utils;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
-import com.sandman.download.entity.SftpParam;
+import com.sandman.download.entity.common.SftpParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +14,7 @@ import java.util.Map;
  * Created by sunpeikai on 2018/4/16.
  */
 public class FileUtils {
+
     private static Map<Integer, String> fileSizeMap = new HashMap<>();
 
     static {//静态代码块，将文件大小的数量级put到map中

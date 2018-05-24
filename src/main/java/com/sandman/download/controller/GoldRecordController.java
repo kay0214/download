@@ -1,7 +1,7 @@
 package com.sandman.download.controller;
 
-import com.sandman.download.entity.BaseDto;
-import com.sandman.download.service.GoldRecordService;
+import com.sandman.download.entity.common.BaseDto;
+import com.sandman.download.service.user.GoldRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

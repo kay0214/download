@@ -1,24 +1,21 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.user;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class ValidateCode implements Serializable{
+public class UploadRecord implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String contact;
-    private String code;
-    private ZonedDateTime deadLine;
-    private int isValid;
-    private int isSend;
+    private Long userId;
+    private Long resId;
     private Long createBy;
     private ZonedDateTime createTime;
     private Long updateBy;
     private ZonedDateTime updateTime;
     private int delFlag;
-
+    private Resource resource;
     public Long getId() {
         return id;
     }
@@ -27,44 +24,20 @@ public class ValidateCode implements Serializable{
         this.id = id;
     }
 
-    public String getContact() {
-        return contact;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getCode() {
-        return code;
+    public Long getResId() {
+        return resId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public ZonedDateTime getDeadLine() {
-        return deadLine;
-    }
-
-    public void setDeadLine(ZonedDateTime deadLine) {
-        this.deadLine = deadLine;
-    }
-
-    public int getIsValid() {
-        return isValid;
-    }
-
-    public void setIsValid(int isValid) {
-        this.isValid = isValid;
-    }
-
-    public int getIsSend() {
-        return isSend;
-    }
-
-    public void setIsSend(int isSend) {
-        this.isSend = isSend;
+    public void setResId(Long resId) {
+        this.resId = resId;
     }
 
     public Long getCreateBy() {
@@ -107,20 +80,26 @@ public class ValidateCode implements Serializable{
         this.delFlag = delFlag;
     }
 
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
     @Override
     public String toString() {
-        return "ValidateCode{" +
+        return "UploadRecord{" +
                 "id=" + id +
-                ", contact='" + contact + '\'' +
-                ", code='" + code + '\'' +
-                ", deadLine=" + deadLine +
-                ", isValid=" + isValid +
-                ", isSend=" + isSend +
+                ", userId=" + userId +
+                ", resId=" + resId +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
+                ", resource=" + resource +
                 '}';
     }
 }

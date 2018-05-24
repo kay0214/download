@@ -1,4 +1,4 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.common;
 
 /**
  * Created by sunpeikai on 2018/4/12.

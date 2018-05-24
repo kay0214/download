@@ -1,6 +1,6 @@
-package com.sandman.download.dao.mysql;
+package com.sandman.download.dao.mysql.user;
 
-import com.sandman.download.entity.DownloadRecord;
+import com.sandman.download.entity.user.DownloadRecord;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

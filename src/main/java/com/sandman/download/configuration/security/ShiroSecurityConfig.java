@@ -2,11 +2,14 @@ package com.sandman.download.configuration.security;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +22,28 @@ import java.util.Map;
 public class ShiroSecurityConfig {
 
     /**
+     * cookie rememberMe
+     * */
+    @Bean(name = "rememberMeCookie")
+    public SimpleCookie rememberMeCookie(){
+        SimpleCookie cookie = new SimpleCookie();
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*60*24*7);//7天记住我
+        cookie.setName("rememberMe");
+        return cookie;
+    }
+    /**
+     * cookie rememberMe manager
+     * */
+    public CookieRememberMeManager cookieRememberMeManager(){
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setEncryptionCipherKey("COOKIEKEYFORSANDMAN".getBytes());
+        cookieRememberMeManager.setDecryptionCipherKey("COOKIEKEYFORSANDMAN".getBytes());
+        cookieRememberMeManager.setCipherKey(Base64.decode("4AvVhmFLUs0KTA3Kprsdag=="));//这里的密码真的不知道该怎么生成
+        return cookieRememberMeManager;
+    }
+    /**
      * securityManager
      * @return
      */
@@ -26,6 +51,7 @@ public class ShiroSecurityConfig {
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myRealm());
+        securityManager.setRememberMeManager(cookieRememberMeManager());//cookie
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());
         securityManager.setSubjectFactory(new DefaultWebSubjectFactory());
         return securityManager;

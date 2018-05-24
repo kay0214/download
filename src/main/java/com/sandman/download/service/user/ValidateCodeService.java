@@ -1,8 +1,9 @@
-package com.sandman.download.service;
+package com.sandman.download.service.user;
 
-import com.sandman.download.dao.mysql.ValidateCodeDao;
-import com.sandman.download.entity.BaseDto;
-import com.sandman.download.entity.ValidateCode;
+import com.sandman.download.dao.mysql.user.ValidateCodeDao;
+import com.sandman.download.entity.common.BaseDto;
+import com.sandman.download.entity.user.ValidateCode;
+import com.sandman.download.service.common.SendEmailService;
 import com.sandman.download.utils.RandomUtils;
 import com.sandman.download.utils.TemplateUtils;
 import org.slf4j.Logger;

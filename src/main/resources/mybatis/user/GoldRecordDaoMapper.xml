@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.sandman.download.dao.mysql.UploadRecordDao">
-    <insert id="createUploadRecord" parameterType="com.sandman.download.entity.UploadRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into uploadRecord(userId,resId,createBy,createTime,updateBy,updateTime,delFlag) values(#{userId},#{resId},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
+<mapper namespace="com.sandman.download.dao.mysql.user.GoldRecordDao">
+    <insert id="createGoldRecord" parameterType="com.sandman.download.entity.user.GoldRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into goldRecord(userId,resId,resName,oriGold,resGold,curGold,opDesc,createBy,createTime,updateBy,updateTime,delFlag) values(#{userId}
+        <choose>
+            <when test="resId!=null and resId!=''">
+                ,#{resId}
+            </when>
+            <otherwise>
+                ,null
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="resName!=null and resName!=''">
+                ,#{resName}
+            </when>
+            <otherwise>
+                ,null
+            </otherwise>
+        </choose>
+        ,#{oriGold},#{resGold},#{curGold},#{opDesc},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
     </insert>
-    <update id="deleteById" parameterType="com.sandman.download.entity.UploadRecord">
-        update uploadRecord set updateTime=#{updateTime}
+    <update id="deleteById" parameterType="com.sandman.download.entity.user.GoldRecord">
+        update goldRecord set updateTime=#{updateTime}
+
         <if test="updateBy!=null or updateBy!=''">
             ,updateBy=#{updateBy}
         </if>
@@ -14,13 +32,18 @@
         </if>
         where id=#{id}
     </update>
-    <select id="findAllByUserId" parameterType="Long" resultMap="uploadRecordResultMap">
-        select <include refid="uploadRecord"/> from uploadRecord t,resource r where t.delFlag=0 and t.userId=#{userId} and t.resId=r.id
+    <select id="findAllByUserId" parameterType="Long" resultMap="goldRecordResultMap">
+        select <include refid="goldRecord"/> from goldRecord t,resource r where t.delFlag=0 and t.userId=#{userId} and t.resId=r.id
     </select>
-    <sql id="uploadRecord">
+    <sql id="goldRecord">
         t.id as id,
         t.userId as userId,
         t.resId as resId,
+        t.resName as resName,
+        t.oriGold as oriGold,
+        t.resGold as resGold,
+        t.curGold as curGold,
+        t.opDesc as opDesc,
         t.createBy as createBy,
         t.createTime as createTime,
         t.updateBy as updateBy,
@@ -43,16 +66,21 @@
         r.updateTime as r_updateTime,
         r.delFlag as r_delFlag
     </sql>
-    <resultMap id="uploadRecordResultMap" type="com.sandman.download.entity.UploadRecord">
+    <resultMap id="goldRecordResultMap" type="com.sandman.download.entity.user.GoldRecord">
         <id property="id" column="id"/>
         <result property="userId" column="userId"/>
         <result property="resId" column="resId"/>
+        <result property="resName" column="resName"/>
+        <result property="oriGold" column="oriGold"/>
+        <result property="resGold" column="resGold"/>
+        <result property="curGold" column="curGold"/>
+        <result property="opDesc" column="opDesc"/>
         <result property="createBy" column="createBy"/>
         <result property="createTime" column="createTime"/>
         <result property="updateBy" column="updateBy"/>
         <result property="updateTime" column="updateTime"/>
         <result property="delFlag" column="delFlag"/>
-        <association property="resource" javaType="com.sandman.download.entity.Resource">
+        <association property="resource" javaType="com.sandman.download.entity.user.Resource">
             <id property="id" column="r_id"/>
             <result property="userId" column="r_userId"/>
             <result property="userName" column="r_userName"/>
@@ -69,7 +97,6 @@
             <result property="updateBy" column="r_updateBy"/>
             <result property="updateTime" column="r_updateTime"/>
             <result property="delFlag" column="r_delFlag"/>
-
         </association>
     </resultMap>
 </mapper>

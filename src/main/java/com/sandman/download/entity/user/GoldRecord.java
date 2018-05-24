@@ -1,15 +1,20 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.user;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class DownloadRecord implements Serializable{
+public class GoldRecord implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private Long userId;
     private Long resId;
+    private String resName;
+    private int oriGold;
+    private int resGold;
+    private int curGold;
+    private String opDesc;
     private Long createBy;
     private ZonedDateTime createTime;
     private Long updateBy;
@@ -39,6 +44,46 @@ public class DownloadRecord implements Serializable{
 
     public void setResId(Long resId) {
         this.resId = resId;
+    }
+
+    public String getResName() {
+        return resName;
+    }
+
+    public void setResName(String resName) {
+        this.resName = resName;
+    }
+
+    public int getOriGold() {
+        return oriGold;
+    }
+
+    public void setOriGold(int oriGold) {
+        this.oriGold = oriGold;
+    }
+
+    public int getResGold() {
+        return resGold;
+    }
+
+    public void setResGold(int resGold) {
+        this.resGold = resGold;
+    }
+
+    public int getCurGold() {
+        return curGold;
+    }
+
+    public void setCurGold(int curGold) {
+        this.curGold = curGold;
+    }
+
+    public String getOpDesc() {
+        return opDesc;
+    }
+
+    public void setOpDesc(String opDesc) {
+        this.opDesc = opDesc;
     }
 
     public Long getCreateBy() {
@@ -91,10 +136,15 @@ public class DownloadRecord implements Serializable{
 
     @Override
     public String toString() {
-        return "DownloadRecord{" +
+        return "GoldRecord{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", resId=" + resId +
+                ", resName='" + resName + '\'' +
+                ", oriGold=" + oriGold +
+                ", resGold=" + resGold +
+                ", curGold=" + curGold +
+                ", opDesc='" + opDesc + '\'' +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +

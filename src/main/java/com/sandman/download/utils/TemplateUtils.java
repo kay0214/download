@@ -1,6 +1,6 @@
 package com.sandman.download.utils;
 
-import com.sandman.download.service.SendEmailService;
+import com.sandman.download.service.common.SendEmailService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

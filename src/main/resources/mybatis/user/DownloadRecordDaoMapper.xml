@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.sandman.download.dao.mysql.DownloadRecordDao">
-    <insert id="createDownloadRecord" parameterType="com.sandman.download.entity.DownloadRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+<mapper namespace="com.sandman.download.dao.mysql.user.DownloadRecordDao">
+    <insert id="createDownloadRecord" parameterType="com.sandman.download.entity.user.DownloadRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into downloadRecord(userId,resId,createBy,createTime,updateBy,updateTime,delFlag) values(#{userId},#{resId},#{createBy},#{createTime},#{updateBy},#{updateTime},#{delFlag})
     </insert>
-    <update id="deleteById" parameterType="com.sandman.download.entity.DownloadRecord">
+    <update id="deleteById" parameterType="com.sandman.download.entity.user.DownloadRecord">
         update downloadRecord set updateTime=#{updateTime}
         <if test="updateBy!=null or updateBy!=''">
             ,updateBy=#{updateBy}
@@ -43,7 +43,7 @@
         r.updateTime as r_updateTime,
         r.delFlag as r_delFlag
     </sql>
-    <resultMap id="downloadRecordResultMap" type="com.sandman.download.entity.DownloadRecord">
+    <resultMap id="downloadRecordResultMap" type="com.sandman.download.entity.user.DownloadRecord">
         <id property="id" column="id"/>
         <result property="userId" column="userId"/>
         <result property="resId" column="resId"/>
@@ -52,7 +52,7 @@
         <result property="updateBy" column="updateBy"/>
         <result property="updateTime" column="updateTime"/>
         <result property="delFlag" column="delFlag"/>
-        <association property="resource" javaType="com.sandman.download.entity.Resource">
+        <association property="resource" javaType="com.sandman.download.entity.user.Resource">
             <id property="id" column="r_id"/>
             <result property="userId" column="r_userId"/>
             <result property="userName" column="r_userName"/>

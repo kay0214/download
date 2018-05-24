@@ -1,9 +1,9 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.user;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class UploadRecord implements Serializable{
+public class DownloadRecord implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -16,6 +16,7 @@ public class UploadRecord implements Serializable{
     private ZonedDateTime updateTime;
     private int delFlag;
     private Resource resource;
+
     public Long getId() {
         return id;
     }
@@ -90,7 +91,7 @@ public class UploadRecord implements Serializable{
 
     @Override
     public String toString() {
-        return "UploadRecord{" +
+        return "DownloadRecord{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", resId=" + resId +

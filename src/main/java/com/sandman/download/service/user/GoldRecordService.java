@@ -1,11 +1,12 @@
-package com.sandman.download.service;
+package com.sandman.download.service.user;
 
 import com.github.pagehelper.PageHelper;
-import com.sandman.download.dao.mysql.GoldRecordDao;
-import com.sandman.download.entity.GoldRecord;
-import com.sandman.download.entity.Resource;
+import com.sandman.download.dao.mysql.user.GoldRecordDao;
+import com.sandman.download.entity.user.GoldRecord;
+import com.sandman.download.entity.user.Resource;
 import com.sandman.download.entity.system.User;
 import com.sandman.download.utils.PageBean;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,7 @@ public class GoldRecordService {
     @Transactional(readOnly = true)
     public Map getAllResourceRecords(Integer pageNumber, Integer size)throws Exception {
         log.debug("Request to get all ResourceRecords");
-        Long userId = 7L;
-        //Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = ShiroSecurityUtils.getCurrentUserId();
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;

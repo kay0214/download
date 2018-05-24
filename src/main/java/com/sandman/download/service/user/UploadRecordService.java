@@ -1,9 +1,10 @@
-package com.sandman.download.service;
+package com.sandman.download.service.user;
 
 import com.github.pagehelper.PageHelper;
-import com.sandman.download.dao.mysql.UploadRecordDao;
-import com.sandman.download.entity.UploadRecord;
+import com.sandman.download.dao.mysql.user.UploadRecordDao;
+import com.sandman.download.entity.user.UploadRecord;
 import com.sandman.download.utils.PageBean;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,8 @@ public class UploadRecordService {
      */
     @Transactional(readOnly = true)
     public Map getAllUploadRecords(Integer pageNumber, Integer size){
-        Long userId = 7L;
 
-       // Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = ShiroSecurityUtils.getCurrentUserId();
         log.info("userId:{}",userId);
         if(userId==null)
             return null;

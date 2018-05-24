@@ -20,10 +20,10 @@ import java.util.Properties;
 
 @Configuration
 // 指定dao的地址，指定sqlSessionFactory的名称
-@MapperScan(basePackages = "com.sandman.download.dao.mysql", sqlSessionFactoryRef = "mysqlSqlSessionFactory")
+@MapperScan(basePackages = "com.sandman.download.dao.mysql.user", sqlSessionFactoryRef = "mysqlSqlSessionFactory")
 public class MysqlDataDaoConfig {
     @Bean(name = "mysqlDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.mysql") // application.properteis中对应属性的前缀
+    @ConfigurationProperties(prefix = "spring.datasource.mysql.user") // application.properteis中对应属性的前缀
     public DataSource mysqlDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
@@ -35,7 +35,7 @@ public class MysqlDataDaoConfig {
         factoryBean.setDataSource(mysqlDataSource());
         Interceptor[] plugins =  new Interceptor[]{pageInterceptor()};
         factoryBean.setPlugins(plugins);
-        factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
+        factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/user/*.xml"));
         return factoryBean.getObject();
     }
     @Bean(name = "sqlSessionTemplate")

@@ -1,10 +1,11 @@
-package com.sandman.download.service;
+package com.sandman.download.service.user;
 
 
 import com.github.pagehelper.PageHelper;
-import com.sandman.download.dao.mysql.DownloadRecordDao;
-import com.sandman.download.entity.DownloadRecord;
+import com.sandman.download.dao.mysql.user.DownloadRecordDao;
+import com.sandman.download.entity.user.DownloadRecord;
 import com.sandman.download.utils.PageBean;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,7 @@ public class DownloadRecordService {
      * 创建一个下载记录
      */
     public DownloadRecord createDownloadRecord(Long resId) {
-        Long userId = 7L;
-        //Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = ShiroSecurityUtils.getCurrentUserId();
         DownloadRecord downloadRecord = new DownloadRecord();
         downloadRecord.setUserId(userId);
         downloadRecord.setResId(resId);
@@ -54,9 +54,8 @@ public class DownloadRecordService {
     @Transactional(readOnly = true)
     public Map getAllDownloadRecords(Integer pageNumber, Integer size){
         log.debug("Request to get all DownloadRecords");
-        Long userId = 7L;
 
-        //Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = ShiroSecurityUtils.getCurrentUserId();
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;

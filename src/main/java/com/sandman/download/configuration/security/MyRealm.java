@@ -26,7 +26,6 @@ public class MyRealm extends AuthorizingRealm{
 		String salt = user.getSalt();
 		String password = PasswordEncrypt.getEncryptedPwdBySalt(String.valueOf(usernamePasswordToken.getPassword()),salt);
 		if(user != null){
-			System.out.println("MyRealm-----------" + user.toString());
 			// 这里我设置的principal传的是user实体
 			SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,
 					password,

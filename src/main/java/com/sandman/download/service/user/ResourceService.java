@@ -1,11 +1,18 @@
-package com.sandman.download.service;
+package com.sandman.download.service.user;
 
 import com.github.pagehelper.PageHelper;
-import com.sandman.download.dao.mysql.ResourceDao;
-import com.sandman.download.entity.*;
+import com.sandman.download.dao.mysql.user.ResourceDao;
+import com.sandman.download.entity.common.BaseDto;
+import com.sandman.download.entity.common.SftpParam;
 import com.sandman.download.entity.system.User;
+import com.sandman.download.entity.user.DownloadRecord;
+import com.sandman.download.entity.user.GoldRecord;
+import com.sandman.download.entity.user.Resource;
+import com.sandman.download.entity.user.UploadRecord;
+import com.sandman.download.service.system.UserService;
 import com.sandman.download.utils.FileUtils;
 import com.sandman.download.utils.PageBean;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +60,11 @@ public class ResourceService {
         if(resource.getResDesc().length()<10)
             return new BaseDto(421,"资源描述必须10个字符以上");
         //开始做用户资源记录
-        //Long userId = SecurityUtils.getCurrentUserId();//登录的时候保存的信息，不用再次查询数据库
-        Long userId = 7L;
+        Long userId = ShiroSecurityUtils.getCurrentUserId();//登录的时候保存的信息，不用再次查询数据库
 
         resource.setUserId(userId);//设置UserId给resource
-        //resource.setUserName(SecurityUtils.getCurrentUserName());//设置资源所属用户
-        //resource.setNickName(SecurityUtils.getCurrentNickName());//设置资源所属用户的昵称
+        resource.setUserName(ShiroSecurityUtils.getCurrentUserName());//设置资源所属用户
+        resource.setNickName(ShiroSecurityUtils.getCurrentNickName());//设置资源所属用户的昵称
 
         String fileType = FileUtils.getSuffixNameByFileName(file.getOriginalFilename());
         fileType = (fileType==null || "".equals(fileType))?"file":fileType;//如果utils给出的文件类型为null，将file赋值给fileType

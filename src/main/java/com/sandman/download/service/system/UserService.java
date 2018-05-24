@@ -1,12 +1,13 @@
-package com.sandman.download.service;
+package com.sandman.download.service.system;
 
 import com.sandman.download.dao.mysql.system.UserDao;
-import com.sandman.download.entity.BaseDto;
+import com.sandman.download.entity.common.BaseDto;
 import com.sandman.download.entity.system.Role;
 import com.sandman.download.entity.system.User;
-import com.sandman.download.entity.ValidateCode;
-import com.sandman.download.service.system.RoleService;
+import com.sandman.download.entity.user.ValidateCode;
+import com.sandman.download.service.user.ValidateCodeService;
 import com.sandman.download.utils.PasswordUtils;
+import com.sandman.download.utils.ShiroSecurityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -71,8 +72,8 @@ public class UserService {
 
     }
     public User getCurUserInfo(){
-        Subject subject = SecurityUtils.getSubject();
-        String userName = (String) subject.getPrincipal();
+        String userName = ShiroSecurityUtils.getCurrentUserName();
+        log.info("getCurUserInfo:::::" + userName);
         if(userName==null || "".equals(userName))
             return null;
         User currentUser = userDao.findByUserName(userName);

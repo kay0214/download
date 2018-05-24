@@ -1,8 +1,8 @@
 package com.sandman.download.controller;
 
-import com.sandman.download.entity.BaseDto;
+import com.sandman.download.entity.common.BaseDto;
 import com.sandman.download.entity.system.User;
-import com.sandman.download.service.UserService;
+import com.sandman.download.service.system.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -72,12 +72,10 @@ public class UserController {
             token = new UsernamePasswordToken(username, password);
             Subject currentUser = SecurityUtils.getSubject();
             if (!currentUser.isAuthenticated()){
-                log.info("开始进行用户认证!!!!!");
                 token.setRememberMe(rememberMe);
                 currentUser.login(token);
             }
-            User user = (User) SecurityUtils.getSubject().getPrincipal();
-            System.out.println("User==============" + user.toString());
+
         } catch (IncorrectCredentialsException e) {
             msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
             System.out.println(msg);

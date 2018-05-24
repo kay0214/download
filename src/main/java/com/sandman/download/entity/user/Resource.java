@@ -1,26 +1,28 @@
-package com.sandman.download.entity;
+package com.sandman.download.entity.user;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class GoldRecord implements Serializable{
+public class Resource implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private Long userId;
-    private Long resId;
+    private String userName;//这里需要改造，直接用User代替userName
+    private String nickName;//这里需要改造，直接用User代替nickName
     private String resName;
-    private int oriGold;
-    private int resGold;
-    private int curGold;
-    private String opDesc;
+    private String resUrl;
+    private Integer resGold;
+    private String resDesc;
+    private Long resSize;
+    private String resType;
+    private int downloadCount;
     private Long createBy;
     private ZonedDateTime createTime;
     private Long updateBy;
     private ZonedDateTime updateTime;
     private int delFlag;
-    private Resource resource;
 
     public Long getId() {
         return id;
@@ -38,12 +40,20 @@ public class GoldRecord implements Serializable{
         this.userId = userId;
     }
 
-    public Long getResId() {
-        return resId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setResId(Long resId) {
-        this.resId = resId;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getResName() {
@@ -54,36 +64,52 @@ public class GoldRecord implements Serializable{
         this.resName = resName;
     }
 
-    public int getOriGold() {
-        return oriGold;
+    public String getResUrl() {
+        return resUrl;
     }
 
-    public void setOriGold(int oriGold) {
-        this.oriGold = oriGold;
+    public void setResUrl(String resUrl) {
+        this.resUrl = resUrl;
     }
 
-    public int getResGold() {
+    public Integer getResGold() {
         return resGold;
     }
 
-    public void setResGold(int resGold) {
+    public void setResGold(Integer resGold) {
         this.resGold = resGold;
     }
 
-    public int getCurGold() {
-        return curGold;
+    public String getResDesc() {
+        return resDesc;
     }
 
-    public void setCurGold(int curGold) {
-        this.curGold = curGold;
+    public void setResDesc(String resDesc) {
+        this.resDesc = resDesc;
     }
 
-    public String getOpDesc() {
-        return opDesc;
+    public Long getResSize() {
+        return resSize;
     }
 
-    public void setOpDesc(String opDesc) {
-        this.opDesc = opDesc;
+    public void setResSize(Long resSize) {
+        this.resSize = resSize;
+    }
+
+    public String getResType() {
+        return resType;
+    }
+
+    public void setResType(String resType) {
+        this.resType = resType;
+    }
+
+    public int getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(int downloadCount) {
+        this.downloadCount = downloadCount;
     }
 
     public Long getCreateBy() {
@@ -126,31 +152,25 @@ public class GoldRecord implements Serializable{
         this.delFlag = delFlag;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     @Override
     public String toString() {
-        return "GoldRecord{" +
+        return "Resource{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", resId=" + resId +
+                ", userName='" + userName + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", resName='" + resName + '\'' +
-                ", oriGold=" + oriGold +
+                ", resUrl='" + resUrl + '\'' +
                 ", resGold=" + resGold +
-                ", curGold=" + curGold +
-                ", opDesc='" + opDesc + '\'' +
+                ", resDesc='" + resDesc + '\'' +
+                ", resSize=" + resSize +
+                ", resType='" + resType + '\'' +
+                ", downloadCount=" + downloadCount +
                 ", createBy=" + createBy +
                 ", createTime=" + createTime +
                 ", updateBy=" + updateBy +
                 ", updateTime=" + updateTime +
                 ", delFlag=" + delFlag +
-                ", resource=" + resource +
                 '}';
     }
 }

@@ -1,8 +1,8 @@
 package com.sandman.download.controller;
 
-import com.sandman.download.entity.BaseDto;
-import com.sandman.download.entity.Resource;
-import com.sandman.download.service.ResourceService;
+import com.sandman.download.entity.common.BaseDto;
+import com.sandman.download.entity.user.Resource;
+import com.sandman.download.service.user.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
