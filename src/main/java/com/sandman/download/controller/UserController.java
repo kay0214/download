@@ -32,7 +32,8 @@ public class UserController {
      * POST : Create a new user.
      */
     @PostMapping("/createUser")
-    public BaseDto createUser(@RequestBody User user, String validateCode) throws URISyntaxException {//这里进行简单校验，在service里面进行复杂校验
+    public BaseDto createUser(@RequestBody User user, String validateCode){
+        //这里进行简单校验，在service里面进行复杂校验
         log.debug("REST request to save User : {},validateCode:{}", user,validateCode);
         if (user.getId() != null) {
             return new BaseDto(415,"创建用户你带什么ID啊!");
@@ -57,6 +58,7 @@ public class UserController {
     }
     @GetMapping("/contactExist")
     public Map<String, Integer> contactExist(String contact){
+        log.info("contactExist:::::::::contact=======" + contact);
         Map<String,Integer> map = new HashMap<>();
         if(contact==null || "".equals(contact) || "null".equals(contact)){
             map.put("exist",0);
@@ -92,6 +94,8 @@ public class UserController {
             return new BaseDto(411,"登录密码错误");
         } catch (UnknownAccountException e) {
             return new BaseDto(423,"用户不存在");
+        }catch (LockedAccountException e){
+            return new BaseDto(424,"账户已被锁定,如需解锁请联系管理员");
         }
         return new BaseDto(200,"登录成功");
     }

@@ -86,10 +86,11 @@ public class ShiroSecurityConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager());
         //Login
         //String loginUrl = "http://www.baidu.com";
-        String loginUrl = "http://39.104.80.30/login";
+        //String loginUrl = "http://39.104.80.30/login";
+        String loginUrl = "";
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
         //shiroFilterFactoryBean.setSuccessUrl("/api/sandman/v1/user/success");
-        shiroFilterFactoryBean.setUnauthorizedUrl("http://39.104.80.30/login");
+        //shiroFilterFactoryBean.setUnauthorizedUrl("http://39.104.80.30/login");
         //Shiro内的filter配置
         Map<String, Filter> filters = new HashMap<>();
 
@@ -109,7 +110,10 @@ public class ShiroSecurityConfig {
         filterChainDefinitionMap.put("/css/**","anon");
         filterChainDefinitionMap.put("/images/**","anon");
         filterChainDefinitionMap.put("/js/**","anon");
-        filterChainDefinitionMap.put("/api/sandman/v1/user/login","anon");
+        filterChainDefinitionMap.put("/api/sandman/v1/user/login","anon");//登录接口，匿名用户可访问
+        filterChainDefinitionMap.put("/api/sandman/v1/resource/getManyResourcesByFuzzy","anon");//首页检索资源接口，匿名用户可访问
+        filterChainDefinitionMap.put("/api/sandman/v1/validateCode/sendValidateCode","anon");//注册用户时发送邮件验证码接口，匿名用户可访问
+        filterChainDefinitionMap.put("/api/sandman/v1/user/contactExist","anon");//验证联系方式是否已经被绑定接口，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/uploadRecord/getAllRecords","authc");
         filterChainDefinitionMap.put("/**", "authc");
 

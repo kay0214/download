@@ -38,6 +38,8 @@ public class MyRealm extends AuthorizingRealm{
 
 		if(!password.equals(user.getPassword()))
 			throw new IncorrectCredentialsException("登录密码错误");
+		if(user.getAvailable()==0)
+			throw new LockedAccountException("账户被锁定");
 		if(user != null){
 			// 这里我设置的principal传的是user实体
 			SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,
