@@ -130,7 +130,7 @@ public class ResourceService {
      * 根据resName和fileName判断用户正在上传的资源是否已经存在在该用户下
      * */
     private boolean resourceExist(String resName,MultipartFile file){
-        Long userId = 7L;
+        Long userId = ShiroSecurityUtils.getCurrentUserId();
 
         List<Resource> resourceList = resourceDao.findByUserId(userId);
         for(Resource resource:resourceList){
@@ -226,7 +226,7 @@ public class ResourceService {
         log.info("update a resource:{}",resource.getId());
         Resource oriResource = resourceDao.findById(resource.getId());
         Long resOwnerId = oriResource.getUserId();
-        if(!resOwnerId.equals(7L)){
+        if(!resOwnerId.equals(ShiroSecurityUtils.getCurrentUserId())){
             return new BaseDto(405,"无权修改!");
         }
 
@@ -253,7 +253,7 @@ public class ResourceService {
     @Transactional(readOnly = true)
     public Map getAllMyResources(Integer pageNumber, Integer size, Long userId,String order,String sortType) {
         log.debug("getAllMyResources pageNumber:{},size:{}",pageNumber,size);
-        userId = (userId==null)?7L:userId;
+        userId = (userId==null)?ShiroSecurityUtils.getCurrentUserId():userId;
         if(userId==null)
             return null;
         pageNumber = (pageNumber==null || pageNumber<1)?1:pageNumber;
@@ -352,7 +352,7 @@ public class ResourceService {
         if(tempRes==null){
             return new BaseDto(408,"资源不存在!");
         }
-        if(!tempRes.getUserId().equals(7L)){
+        if(!tempRes.getUserId().equals(ShiroSecurityUtils.getCurrentUserId())){
             return new BaseDto(406,"无权删除!");
         }
 

@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunpeikai on 2018/5/4.
@@ -93,17 +95,20 @@ public class UserService {
     /**
      * 验证联系方式是否已经被绑定，这里判定是何种联系方式的方法是正则表达式
      * */
-    public Integer contactExist(String contact){
+    public BaseDto contactExist(String contact){
         List<User> userList = new ArrayList<>();
         if(contact.contains("@")){//验证邮箱是否已经被绑定
             userList = userDao.findByEmail(contact);
         }else{//验证手机号是否已经被绑定
             userList = userDao.findByMobile(contact);
         }
-
-        if(userList.size()>0)//userList>0，表示已经存在，返回1
-            return 1;
-        return 2;
+        Map map = new HashMap();
+        if(userList.size()>0) {//userList>0，表示已经存在，返回1
+            map.put("exist",1);
+            return new BaseDto(426,"联系方式已经被绑定",map);
+        }
+        map.put("exist",2);
+        return new BaseDto(200,"联系方式未被绑定",map);
     }
     /**
      * 验证码过期校验

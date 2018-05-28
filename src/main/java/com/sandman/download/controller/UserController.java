@@ -57,15 +57,13 @@ public class UserController {
         return new BaseDto(419,"用户未登录!");
     }
     @GetMapping("/contactExist")
-    public Map<String, Integer> contactExist(String contact){
-        log.info("contactExist:::::::::contact=======" + contact);
+    public BaseDto contactExist(String contact){
         Map<String,Integer> map = new HashMap<>();
         if(contact==null || "".equals(contact) || "null".equals(contact)){
             map.put("exist",0);
-            return map;
+            return new BaseDto(425,"请先填写联系方式",map);
         }
-        map.put("exist",userService.contactExist(contact));//0:未传入联系方式；1:联系方式已经被绑定；2:联系方式未被绑定
-        return map;
+        return userService.contactExist(contact);//0:未传入联系方式；1:联系方式已经被绑定；2:联系方式未被绑定
     }
     @PostMapping("/success")
     public BaseDto success(){
