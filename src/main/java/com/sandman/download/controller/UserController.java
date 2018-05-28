@@ -97,4 +97,10 @@ public class UserController {
         }
         return new BaseDto(200,"登录成功");
     }
+    @GetMapping("/logout")
+    public BaseDto logout(){
+        log.info("logout");
+        ShiroSecurityUtils.getCurrentSubject().logout();
+        return new BaseDto(200,"用户退出!");
+    }
 }

@@ -111,6 +111,7 @@ public class ShiroSecurityConfig {
         filterChainDefinitionMap.put("/images/**","anon");
         filterChainDefinitionMap.put("/js/**","anon");
         filterChainDefinitionMap.put("/api/sandman/v1/user/login","anon");//登录接口，匿名用户可访问
+        filterChainDefinitionMap.put("/api/sandman/v1/user/logout","authc");//退出接口，登录用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/resource/getManyResourcesByFuzzy","anon");//首页检索资源接口，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/resource/getAllMyResources","anon");//搜索我的资源，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/validateCode/sendValidateCode","anon");//注册用户时发送邮件验证码接口，匿名用户可访问
