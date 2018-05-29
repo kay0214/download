@@ -1,0 +1,47 @@
+server:
+  port: 8081
+logging:
+  level:
+    root: info
+#39.104.80.30
+spring:
+  #数据库配置
+  datasource:
+    mysql:
+      #用户数据库配置，存放用户数据
+      user:
+        jdbcUrl: jdbc:mysql://39.104.80.30:3306/sandman?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL
+        username: sunpeikai
+        password: spkzq521
+        driver-class-name: com.mysql.jdbc.Driver
+      #系统数据库配置，存放用户账户信息及权限信息
+      system:
+        jdbcUrl: jdbc:mysql://39.104.80.30:3306/sandman_sys?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+        username: sunpeikai
+        password: spkzq521
+        driver-class-name: com.mysql.jdbc.Driver
+  http:
+    multipart:
+      maxFileSize: -1 #上传的单个文件大小无限制
+      maxRequestSize: -1 #批量上传时，上传的全部文件大小无限制
+
+#自定义配置
+sftpServer:
+  userName: root
+  password: abcd54321
+  host: 39.104.80.30
+  sshPort: 22
+  prefix: /var/www/html/spkIMG
+  tempFilePath: C:\\Test #/home/sandman #MultiPartFile转File时，临时文件存放路径
+
+elasticsearch:
+  clusterName: sunpk-es
+  host: 192.168.1.130
+  port: 9303
+mail:
+  smtp:
+    host: smtp.yeah.net
+    port: 25
+  senderAccount: sunpeikai@yeah.net
+  password: spkzq521
+  myNickName: sandman
