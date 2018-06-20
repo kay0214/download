@@ -50,7 +50,8 @@ public class UserController {
         Subject currentSubject = ShiroSecurityUtils.getCurrentSubject();
         log.info("user[{}] has permission[getCurUserInfo]:::{}",ShiroSecurityUtils.getCurrentUserName(),isPermitted);
         log.info("has role[USER]:::{};has role[ADMIN]::::{}",currentSubject.hasRole("USER"),currentSubject.hasRole("ADMIN"));
-        User user = userService.getCurUserInfo();
+        //User user = userService.getCurUserInfo();
+        User user = ShiroSecurityUtils.getCurrentUser();
         if(user!=null){
             return new BaseDto(200,"查询成功!",user);
         }

@@ -10,6 +10,7 @@ import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,9 +45,36 @@ public class ShiroSecurityConfig {
         return cookieRememberMeManager;
     }
     /**
+     * CachingShiroSessionDao
+     */
+    @Bean(name = "shiroSessionDao")
+    public ShiroSessionDao shiroSessionDao(){
+        return new ShiroSessionDao();
+    }
+    /**
      * securityManager
      * @return
      */
+    /**
+     * EhCacheManager,缓存管理，用户登陆成功后，把用户信息和权限信息缓存起来
+     */
+    @Bean(name = "sessionFactory")
+    public ShiroSessionFactory shiroSessionFactory() {
+        return new ShiroSessionFactory();
+    }
+
+    @Bean(name = "sessionManager")
+    public DefaultWebSessionManager sessionManager(){
+        DefaultWebSessionManager manager = new DefaultWebSessionManager();
+        //manager.setCacheManager(cacheManager);// 加入缓存管理器
+        manager.setSessionFactory(shiroSessionFactory());//设置sessionFactory
+        manager.setSessionDAO(shiroSessionDao());// 设置SessionDao
+        manager.setDeleteInvalidSessions(true);// 删除过期的session
+        manager.setGlobalSessionTimeout(shiroSessionDao().getExpireTime());// 设置全局session超时时间
+        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
+        return manager;
+    }
+
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -54,6 +82,7 @@ public class ShiroSecurityConfig {
         securityManager.setRememberMeManager(cookieRememberMeManager());//cookie
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());
         securityManager.setSubjectFactory(new DefaultWebSubjectFactory());
+        securityManager.setSessionManager(sessionManager());
         return securityManager;
     }
     @Bean
@@ -116,8 +145,9 @@ public class ShiroSecurityConfig {
         filterChainDefinitionMap.put("/api/sandman/v1/resource/getAllMyResources","anon");//搜索我的资源，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/validateCode/sendValidateCode","anon");//注册用户时发送邮件验证码接口，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/user/contactExist","anon");//验证联系方式是否已经被绑定接口，匿名用户可访问
+        filterChainDefinitionMap.put("/api/sandman/v1/user/createUser","anon");//创建用户接口，匿名用户可访问
         filterChainDefinitionMap.put("/api/sandman/v1/uploadRecord/getAllRecords","authc");
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;

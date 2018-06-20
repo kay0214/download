@@ -2,6 +2,7 @@ package com.sandman.download.utils;
 
 import com.sandman.download.entity.system.User;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 /**
@@ -15,6 +16,12 @@ public class ShiroSecurityUtils {
         Subject subject = getCurrentSubject();
         User user = (User) subject.getPrincipal();
         return user;
+    }
+    /**
+     * 获取当前登录session
+     * */
+    public static Session getSession(){
+        return getCurrentSubject().getSession();
     }
     /**
      * 返回当前用户的id

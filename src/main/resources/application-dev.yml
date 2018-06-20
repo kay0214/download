@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 logging:
   level:
     root: info
@@ -10,7 +10,7 @@ spring:
     mysql:
       #用户数据库配置，存放用户数据
       user:
-        jdbcUrl: jdbc:mysql://39.104.80.30:3306/sandman?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL
+        jdbcUrl: jdbc:mysql://39.104.80.30:3306/sandman?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
         username: sunpeikai
         password: spkzq521
         driver-class-name: com.mysql.jdbc.Driver
