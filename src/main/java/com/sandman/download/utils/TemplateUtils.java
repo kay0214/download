@@ -1,5 +1,6 @@
 package com.sandman.download.utils;
 
+import com.sandman.download.entity.common.SftpParam;
 import com.sandman.download.service.common.SendEmailService;
 
 import java.io.BufferedReader;
@@ -15,8 +16,8 @@ public class TemplateUtils {
      * 获取到指定模板内容,用于给用户发邮件
      * */
     public static String getTemplateByName(String templateName){
-        String classPath = SendEmailService.class.getClassLoader().getResource("").getPath();
-        String filePath = classPath + "templates/" + templateName + ".html";
+        String classPath = SftpParam.getTemplatesPath();
+        String filePath = classPath + "/" + templateName + ".html";
         StringBuffer sb = new StringBuffer();
         Reader reader = null;
         BufferedReader br = null;

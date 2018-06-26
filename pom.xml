@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>sandman</name>
-	<description>Demo project for Spring Boot</description>
+	<name>download</name>
+	<description>project for sandman download</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -149,7 +149,7 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
-		<finalName>sandman</finalName>
+		<finalName>download</finalName>
 	</build>
 
 

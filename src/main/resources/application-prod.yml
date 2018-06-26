@@ -10,13 +10,13 @@ spring:
     mysql:
       #用户数据库配置，存放用户数据
       user:
-        jdbcUrl: jdbc:mysql://localhost:3306/sandman?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+        jdbcUrl: jdbc:mysql://117.48.197.114:3306/sandman?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
         username: sunpeikai
         password: spkzq521
         driver-class-name: com.mysql.jdbc.Driver
       #系统数据库配置，存放用户账户信息及权限信息
       system:
-        jdbcUrl: jdbc:mysql://localhost:3306/sandman_sys?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+        jdbcUrl: jdbc:mysql://117.48.197.114:3306/sandman_sys?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false
         username: sunpeikai
         password: spkzq521
         driver-class-name: com.mysql.jdbc.Driver
@@ -28,12 +28,13 @@ spring:
 #自定义配置
 sftpServer:
   userName: root
-  password: abcd54321
-  host: 39.104.80.30
+  password: ADSFzcxv2825
+  host: 117.48.197.114
   sshPort: 22
-  prefix: /var/www/html/spkIMG
+  prefix: /home/sandman/download #download项目的基础地址
   tempFilePath: /home/sandman #/home/sandman #MultiPartFile转File时，临时文件存放路径
-
+  bloggerDefaultImg: http://117.48.197.114/blog/avatar/default/20180530152641ED5D0ECCB7034FC5ACBC753BD9ECCA33.jpg
+  templatesPath: /home/sandman/templates
 elasticsearch:
   clusterName: sunpk-es
   host: 192.168.1.130

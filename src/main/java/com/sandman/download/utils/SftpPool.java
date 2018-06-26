@@ -1,6 +1,8 @@
 package com.sandman.download.utils;
 
 import com.jcraft.jsch.*;
+import com.sandman.download.entity.common.SftpParam;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,11 +50,11 @@ public class SftpPool{
             JSch jSch = new JSch();
 
             //一台特定机器，后期考虑分布式的话需要改造
-/*            Session session = jSch.getSession(SftpParam.getUSERNAME(),SftpParam.getHOST(),SftpParam.getSshPort());
-            session.setPassword(SftpParam.getPASSWORD());*/
+            Session session = jSch.getSession(SftpParam.getUSERNAME(),SftpParam.getHOST(),SftpParam.getSshPort());
+            session.setPassword(SftpParam.getPASSWORD());
 
-            Session session = jSch.getSession("root","39.104.80.30",22);
-            session.setPassword("abcd54321");
+            /*Session session = jSch.getSession("root","39.104.80.30",22);
+            session.setPassword("abcd54321");*/
 
             session.setConfig("StrictHostKeyChecking", "no");
             session.setUserInfo(new JschUserInfoImpl());

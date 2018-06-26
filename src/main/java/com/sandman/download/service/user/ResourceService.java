@@ -68,7 +68,7 @@ public class ResourceService {
 
         String fileType = FileUtils.getSuffixNameByFileName(file.getOriginalFilename());
         fileType = (fileType==null || "".equals(fileType))?"file":fileType;//如果utils给出的文件类型为null，将file赋值给fileType
-        String filePath = SftpParam.getPathPrefix() + "/" + fileType + "/" + userId + "/";//  /var/www/html/spkIMG + / + rar + / + userId + /
+        String filePath = SftpParam.getPathPrefix() + "/" + fileType + "/" + userId + "/";//  /root/sandman/download + / + rar + / + userId + /
 
         String resName = resource.getResName();
         log.info("用户传入的resName:{}",resName);
